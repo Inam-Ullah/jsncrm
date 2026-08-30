@@ -10,7 +10,9 @@
 - Laravel: 10.50.3
 - PHP: 8.2.33
 - Web application currently tested at `http://192.168.20.55:8080`
-- The Laravel directory is **not a Git repository** (`git rev-parse` returns `NOT_GIT`). Therefore there is no reliable Git diff/history. Inspect actual files and make a backup before broad edits.
+- The Laravel directory is now a Git repository on branch `master`.
+- Commits at handover: `8261452` (initial project snapshot) and `b296244` (restored model relations and handover report).
+- No Git remote is configured yet, so these commits have not been pushed to an external repository. Add the owner-provided remote before `git push`.
 - Database is configured and all currently present migrations have run in batch 1.
 - Seeded data currently includes 12 roles, 2 areas, 7 type rows, 2 users and 2 settings rows.
 
@@ -62,14 +64,14 @@ Current unfinished UI task:
 - Reuse the existing legacy CSS/JS already copied under `public/theme1/assets/themes/legacy`; do not recreate the theme styling.
 - After the layout is correct, move the combined profile content into it and remove the temporary custom styling where legacy classes/assets cover it.
 
-Urgent model recovery status at handover:
+Model recovery status at handover:
 
-- Relationship methods were mistakenly removed on the server during the last turn.
-- The mistake was identified and all **202 original relationship methods across 49 model files** were recovered from the local pre-change backup.
+- Relationship methods were mistakenly removed during the last turn.
+- The mistake was corrected and all **202 original relationship methods across 49 model files** were recovered from the pre-change backup and uploaded to the server.
 - Corrected models contain the relationship methods but no `Illuminate\Database\Eloquent\Relations\...` imports and no relation return types.
-- Corrected files are staged locally at `work/model_relations_restored/` in the Codex workspace.
-- A restore generator is at `work/restore_model_relations.ps1`.
-- The Codex environment blocked the final SSH upload when network permission changed. Therefore the next agent must **first upload these 49 corrected model files to `/var/www/zalpro-laravel-10/app/Models/` and verify them** before doing any UI work.
+- Verification passed on the server: 49 model files, 202 relation calls, zero relation-class imports, zero typed relation returns, and no PHP syntax failures.
+- Recovery source remains available locally at `work/model_relations_restored/`, with generator `work/restore_model_relations.ps1`.
+- The correction is committed in Git as `b296244`.
 
 Legacy reference files:
 
@@ -341,7 +343,7 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [x] Built four login themes and fixed responsive issues.
 - [x] Added setting/logo/favicon/background helpers.
 - [x] Removed duplicated background logic from controller.
-- [x] Recovered 202 Eloquent relationship methods locally after accidental removal; removed only their relation class imports/return declarations.
+- [x] Recovered and uploaded 202 Eloquent relationship methods after accidental removal; removed only relation class imports/return declarations; verified and committed.
 - [x] Added initial combined ProfileController and route.
 
 ## 16. Pending checklist
@@ -359,7 +361,7 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [ ] Implement billing/payment/ledger workflows and hierarchy profit posting.
 - [ ] Implement customer/RADIUS lifecycle, CoA, expiration/disable policy switching.
 - [ ] Implement controllers/routes/views/AJAX for the many schema-only modules.
-- [ ] Upload and verify `work/model_relations_restored/*.php` on the server before any other work.
+- [ ] Add the owner-provided Git remote and push the existing `master` commits.
 - [ ] Add authorization middleware/policies or approved controller checks after owner confirms design.
 - [ ] Add validation, tests, production security, secret encryption and seeded-password rotation.
 - [ ] Initialize Git or create a safe backup/versioning workflow (project is currently not a Git repo).
@@ -367,9 +369,9 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 ## 17. Immediate continuation instructions for Anti-Gravity
 
 1. Read this file and inspect live files; do not restart schema design.
-2. **First restore the corrected models:** upload every PHP file from local `work/model_relations_restored/` to server `/var/www/zalpro-laravel-10/app/Models/`. Then verify 202 relation calls, zero `Eloquent\Relations` imports, zero typed relation returns and run PHP syntax checks for all models.
-3. Do **not** run migrations, rollback, fresh seed or destructive SQL unless the owner explicitly asks.
-4. Make a backup because there is no Git repository.
+2. Verify the clean working tree and existing commits. Ask the owner for the Git remote URL, add it, and push `master`; do not invent a repository destination.
+3. After every future coherent change: verify it, create a focused Git commit, and push it to the configured remote as explicitly required by the owner.
+4. Do **not** run migrations, rollback, fresh seed or destructive SQL unless the owner explicitly asks.
 5. Read the full legacy dashboard header/footer and identify the exact boundary of:
    - `<head>` asset links,
    - sidebar,
@@ -398,7 +400,7 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 
 ## 18. Known uncertainties and risks
 
-- No Git history exists, so “added/removed/renamed” information is reconstructed from current migrations, live schema and prior approved decisions.
+- Git history begins with the late initial snapshot; changes before that snapshot have no granular commit history. Earlier “added/removed/renamed” information is reconstructed from current migrations, live schema and approved decisions.
 - All current migrations are already run, despite earlier stages where they had not yet been run. Treat the current database as live state.
 - Relationship removal was a misunderstanding, not an owner decision. Relationship methods must exist; only relation class imports/return types are disallowed.
 - The permissions table is very wide and legacy-style by explicit instruction.
@@ -411,4 +413,4 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 
 ---
 
-**Handover state:** Background helper correction is finished. The urgent first action is uploading/verifying the locally recovered relationship-enabled models. After that, continue immediately before creating the reusable authenticated Theme 1 legacy layout partials and refitting the combined profile page into that layout.
+**Handover state:** Background helper correction and relationship restoration are finished, verified and committed. No remote is configured, so pushing is pending the owner-provided repository URL. UI work stops immediately before creating the reusable authenticated Theme 1 legacy layout partials and refitting the combined profile page into that layout.
