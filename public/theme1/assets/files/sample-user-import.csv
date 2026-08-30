@@ -1,0 +1,2 @@
+full_name,identity_number,mobile_number,username,password,connection_type,expiration_date,package_id,nas_id,static_ip,mac_address,phone_number,email_address,address,city_id,area_id,subarea_id,latitude,longitude,box_number,box_address,up_link_port,fiber_code,fiber_color,switch_board,backup_connection,electricity_socket,cable_type
+John Doe Test,01234567890,41234123426456,john_doe_test,dfsdg4643,1,20/12/2022 23:59,46,1,,,52353453453,johndoe@site.com,abc address,1070,1074,1075,,,abc text,abc text,abc text,abc text,abc text,abc text,abc text,abc text,abc text

@@ -1,0 +1,133 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body#access_page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin-top: 0 !important;
+    display: flex;
+    align-items: stretch;
+}
+
+body#access_page > .container {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #3f5265;
+}
+
+.theme-login-logo {
+    display: inline-block;
+    max-width: 220px;
+    max-height: 76px;
+    object-fit: contain;
+}
+
+.theme-login-heading {
+    margin: 0 0 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    font-size: clamp(22px, 2.2vw, 32px);
+    line-height: 1.45;
+}
+
+.theme-login-heading strong {
+    display: block;
+}
+
+.theme-login-brand {
+    margin-top: auto;
+}
+
+.theme-login-panel {
+    margin-top: 10px;
+}
+
+.theme-login-footer {
+    margin-top: auto;
+    margin-bottom: 0;
+    flex: 0 0 auto;
+}
+
+.modal-footer .btn + .btn {
+    margin-bottom: 5px;
+    margin-left: 0;
+}
+
+@media (max-width: 767px) {
+    body#access_page > .container {
+        padding: 10px 15px;
+    }
+
+    .theme-login-logo {
+        max-width: 150px;
+        max-height: 55px;
+    }
+
+    .theme-login-heading {
+        margin: 0 0 5px;
+        gap: 8px;
+        font-size: 20px;
+        line-height: 1.35;
+    }
+
+    .theme-login-panel {
+        margin-top: 5px;
+    }
+
+    .theme-login-panel .form-group {
+        margin-bottom: 10px;
+    }
+
+    .theme-login-footer {
+        margin-top: auto;
+        font-size: 11px;
+        line-height: 1.35;
+    }
+}
+
+@media (max-height: 700px) {
+    body#access_page > .container {
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+
+    .theme-login-logo {
+        max-height: 45px;
+    }
+
+    .theme-login-heading {
+        gap: 5px;
+        font-size: 18px;
+    }
+
+    .theme-login-panel .form-group {
+        margin-bottom: 7px;
+    }
+
+    .theme-login-footer {
+        font-size: 10px;
+    }
+}

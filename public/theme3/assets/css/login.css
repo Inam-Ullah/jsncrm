@@ -1,0 +1,123 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body.login-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+.index-page .squares.square2,
+.login-page .squares.square2,
+.reset-page .squares.square2 {
+    right: 1% !important;
+}
+
+.page-header .container,
+.page-header .container-fluid {
+    padding-top: 0 !important;
+}
+
+.page-header {
+    min-height: 0 !important;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.page-header > .container {
+    height: 100%;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.footer {
+    flex: 0 0 auto;
+    padding: 8px 0;
+}
+
+.theme-login-alerts {
+    flex: 0 0 auto !important;
+}
+
+.theme-login-logo {
+    max-width: 210px;
+    max-height: 72px;
+    object-fit: contain;
+}
+
+.theme-brand-logo-row {
+    margin: 0 0 10px;
+}
+
+.theme-brand-title {
+    margin: 0 0 8px;
+    line-height: 1.25;
+}
+
+.theme-login-label {
+    margin: 0;
+}
+
+@media (max-width: 767px) {
+    .page-header > .container {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+    }
+
+    .page-header h1 {
+        margin-bottom: 7px;
+        font-size: 18px;
+        line-height: 1.25;
+    }
+
+    .page-header h4 {
+        font-size: 15px;
+    }
+
+    .theme-login-logo {
+        max-width: 140px;
+        max-height: 50px;
+    }
+
+    .card.card-login {
+        margin-top: 8px !important;
+        margin-bottom: 0;
+    }
+
+    .card-login .card-header {
+        padding-top: 10px;
+        padding-bottom: 0;
+    }
+
+    .card-login .card-body {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .card-login .input-group {
+        margin-bottom: 8px;
+    }
+
+    .card-login .card-footer {
+        padding-top: 5px;
+        padding-bottom: 12px;
+    }
+
+    .footer {
+        padding: 4px 10px;
+        font-size: 11px;
+        line-height: 1.3;
+    }
+}
