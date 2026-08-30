@@ -10,9 +10,9 @@
 - Laravel: 10.50.3
 - PHP: 8.2.33
 - Web application currently tested at `http://192.168.20.55:8080`
-- The Laravel directory is now a Git repository on branch `master`.
-- Commits at handover: `8261452` (initial project snapshot) and `b296244` (restored model relations and handover report).
-- No Git remote is configured yet, so these commits have not been pushed to an external repository. Add the owner-provided remote before `git push`.
+- The Laravel directory is a Git repository on branch `main` and tracks `origin/main`.
+- GitHub remote: `https://github.com/Inam-Ullah/jsncrm.git`.
+- Latest implementation commit at this handover stage: `241ebc2` (`Migrate legacy Theme 1 dashboard layout`).
 - Database is configured and all currently present migrations have run in batch 1.
 - Seeded data currently includes 12 roles, 2 areas, 7 type rows, 2 users and 2 settings rows.
 
@@ -47,7 +47,7 @@ The next agent must preserve these decisions:
 
 ## 4. Current stopping point (read this first)
 
-The login system and four login templates are considered final for now. Work had just moved to the authenticated Theme 1 application layout and a combined profile page.
+The login system and four login templates are considered final for now. The authenticated Theme 1 shell and first dummy dashboard are now complete and verified. Work stops immediately before refitting the combined profile page into this reusable layout.
 
 Completed immediately before handover:
 
@@ -55,14 +55,17 @@ Completed immediately before handover:
 - `background()` in `app/Helpers/helpers.php` is now the single source and correctly returns background number 1–8.
 - Theme 4 login directly calls `background()`.
 - The helper/controller pass syntax checks and Blade cache compiles.
+- Migrated the legacy Theme 1 dashboard shell into a reusable Blade layout.
+- Split head assets, sidebar, top navbar, footer and scripts into dedicated partials.
+- Created a dummy Theme 1 dashboard and minimal `HomeController@index`; no business queries were added.
+- Reused the existing Gentelella/legacy Theme 1 CSS and JavaScript assets; no replacement dashboard CSS was written.
+- Verified the authenticated dashboard on desktop and a 390-pixel mobile viewport: no horizontal overflow and no browser console errors.
 
 Current unfinished UI task:
 
 - A first combined profile controller/view exists and renders, but the profile view is a **temporary standalone layout with custom `profile.css`**.
 - The owner rejected that standalone approach.
-- Next agent must first migrate the legacy Theme 1 shell into separate reusable Blade files: layout, header/head assets, sidebar, navbar/top navigation and footer.
-- Reuse the existing legacy CSS/JS already copied under `public/theme1/assets/themes/legacy`; do not recreate the theme styling.
-- After the layout is correct, move the combined profile content into it and remove the temporary custom styling where legacy classes/assets cover it.
+- Next agent must move the combined profile content into the completed Theme 1 layout and remove the temporary custom styling where legacy classes/assets cover it.
 
 Model recovery status at handover:
 
@@ -271,7 +274,7 @@ Controllers currently present:
 
 - Breeze auth controllers.
 - `AuthenticatedSessionController`: theme login selection, login/logout timestamp updates.
-- `HomeController`: route exists, but inspect it before use; dashboard implementation is not complete.
+- `HomeController`: minimal dummy dashboard implementation only. It reads the authenticated user and setting, then returns `theme1.dashboard.index` with an explicit array. No business queries exist yet.
 - `ProfileController`: first-stage combined profile only.
 
 Current custom routes:
@@ -302,13 +305,16 @@ No substantive service layer exists yet. Do not claim that billing/network busin
 - Blade `@php` was removed from login and touched component files.
 - Four full asset directories exist under `public/theme1` through `public/theme4`.
 - Legacy Theme 1 assets are already available under `public/theme1/assets/themes/legacy`.
+- Reusable authenticated Theme 1 layout exists at `resources/views/theme1/layouts/app.blade.php`.
+- Layout partials exist for head assets, sidebar, navbar, footer and scripts.
+- Dummy dashboard exists at `resources/views/theme1/dashboard/index.blade.php` and uses legacy classes/assets.
+- Desktop/mobile dashboard render, console and overflow checks passed.
 
 ### Temporary / must be replaced next
 
 - `resources/views/theme1/profile/index.blade.php` is a temporary standalone profile page.
 - `public/theme1/assets/css/profile.css` is custom temporary styling and conflicts with the owner's requirement to reuse legacy CSS.
-- Existing `resources/views/theme1/layouts/app.blade.php`, `guest.blade.php`, and `navigation.blade.php` are older Breeze/Tailwind experiments and are not the approved authenticated Theme 1 legacy layout.
-- Do not blindly use those files. Rebuild the authenticated layout from the legacy dashboard reference and separate partials.
+- `guest.blade.php` and `navigation.blade.php` may still be older Breeze/Tailwind experiments; inspect before reuse. The approved authenticated layout is now `theme1/layouts/app.blade.php` plus its partials.
 
 No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in assets but must be reconnected endpoint-by-endpoint after controllers/routes exist.
 
@@ -317,10 +323,14 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - `app/Helpers/helpers.php`
 - `app/Http/Controllers/Auth/AuthenticatedSessionController.php`
 - `app/Http/Controllers/ProfileController.php`
+- `app/Http/Controllers/HomeController.php`
 - `routes/web.php`
 - All files in `app/Models/` (relationship methods must be restored from the staged corrected copies; only relation type classes/imports are removed)
 - `resources/views/auth/theme1/login.blade.php` through `theme4/login.blade.php`
 - `resources/views/theme1/profile/index.blade.php` (temporary)
+- `resources/views/theme1/dashboard/index.blade.php`
+- `resources/views/theme1/layouts/app.blade.php`
+- `resources/views/theme1/layouts/partials/{head,sidebar,navbar,footer,scripts}.blade.php`
 - `resources/views/components/nav-link.blade.php`
 - `resources/views/components/responsive-nav-link.blade.php`
 - `resources/views/components/dropdown.blade.php`
@@ -345,58 +355,46 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [x] Removed duplicated background logic from controller.
 - [x] Recovered and uploaded 202 Eloquent relationship methods after accidental removal; removed only relation class imports/return declarations; verified and committed.
 - [x] Added initial combined ProfileController and route.
+- [x] Migrated the legacy Theme 1 authenticated shell into reusable Blade layout partials.
+- [x] Created the minimal HomeController and dummy dashboard without business logic.
+- [x] Verified the dashboard on desktop/mobile with no horizontal overflow or console errors.
+- [x] Configured `origin`, moved to `main`, and pushed the implementation history to GitHub.
 
 ## 16. Pending checklist
 
-- [ ] Create approved Theme 1 authenticated Blade layout using legacy assets.
-- [ ] Split it into clear reusable files: main layout, head/header assets, sidebar, navbar/topnav, footer and script includes.
 - [ ] Replace standalone profile shell with `@extends`/`@include`/sections using those partials.
 - [ ] Remove or stop linking temporary `profile.css` once legacy classes cover the UI.
 - [ ] Rebuild the combined profile content from all six legacy profile reference views.
 - [ ] Keep controller dummy data initially and confirm visual structure/role visibility with owner.
-- [ ] Build dashboard/HomeController and choose layout by `dashboard_theme` later.
+- [ ] Replace dashboard dummy values with real controller/business data later, after the owner approves the templates.
+- [ ] Choose authenticated layout dynamically by `dashboard_theme` later; currently only Theme 1 authenticated layout is implemented.
 - [ ] Implement permission storage/application, profile actions, documents, notes, counters and maps.
 - [ ] Implement policy module over `radgroupcheck`/`radgroupreply`.
 - [ ] Implement package schedule validation (maximum 12 daily slots, valid non-overlap).
 - [ ] Implement billing/payment/ledger workflows and hierarchy profit posting.
 - [ ] Implement customer/RADIUS lifecycle, CoA, expiration/disable policy switching.
 - [ ] Implement controllers/routes/views/AJAX for the many schema-only modules.
-- [ ] Add the owner-provided Git remote and push the existing `master` commits.
 - [ ] Add authorization middleware/policies or approved controller checks after owner confirms design.
 - [ ] Add validation, tests, production security, secret encryption and seeded-password rotation.
-- [ ] Initialize Git or create a safe backup/versioning workflow (project is currently not a Git repo).
 
 ## 17. Immediate continuation instructions for Anti-Gravity
 
 1. Read this file and inspect live files; do not restart schema design.
-2. Verify the clean working tree and existing commits. Ask the owner for the Git remote URL, add it, and push `master`; do not invent a repository destination.
+2. Verify the clean working tree and that `main` matches `origin/main` before starting a new change.
 3. After every future coherent change: verify it, create a focused Git commit, and push it to the configured remote as explicitly required by the owner.
 4. Do **not** run migrations, rollback, fresh seed or destructive SQL unless the owner explicitly asks.
-5. Read the full legacy dashboard header/footer and identify the exact boundary of:
-   - `<head>` asset links,
-   - sidebar,
-   - top navigation,
-   - content wrapper,
-   - footer,
-   - common script includes.
-6. Create Laravel Blade partials under a clear location such as:
-   - `resources/views/theme1/layouts/app.blade.php`
-   - `resources/views/theme1/layouts/partials/head.blade.php`
-   - `.../sidebar.blade.php`
-   - `.../navbar.blade.php`
-   - `.../footer.blade.php`
-   - `.../scripts.blade.php`
-7. Translate legacy PHP/CodeIgniter calls to existing Laravel variables/helpers without `@php`, type declarations, strict comparisons or facades where helpers suffice. Eloquent relationship methods are allowed and expected; relation return-type classes are not.
-8. Reuse URLs under `theme1/assets/themes/legacy/...`; do not write a replacement CSS theme.
-9. Keep sidebar permissions as dummy controller-provided flags/role `if/elseif` during this template stage.
-10. Convert the temporary profile page to the new layout. Compare it against all legacy profile views and combine the role variants into one page.
-11. Verify with:
+5. Treat the completed Theme 1 layout/partials and dummy dashboard as the approved shell; do not rebuild them from scratch.
+6. Translate remaining legacy PHP/CodeIgniter calls to existing Laravel variables/helpers without `@php`, type declarations, strict comparisons or facades where helpers suffice. Eloquent relationship methods are allowed and expected; relation return-type classes are not.
+7. Reuse URLs under `theme1/assets/themes/legacy/...`; do not write a replacement CSS theme.
+8. Keep sidebar permissions as dummy controller-provided flags/role `if/elseif` during this template stage.
+9. Convert the temporary profile page to the new layout. Compare it against all legacy profile views and combine the role variants into one page.
+10. Verify with:
     - PHP syntax checks,
     - `php artisan view:clear && php artisan view:cache`,
     - `php artisan route:list --path=profile`,
     - authenticated Super Admin/Admin browser checks on desktop/mobile,
     - console errors and horizontal overflow.
-12. Present the layout/profile visually to the owner before implementing profile CRUD or real business logic.
+11. Present the profile visually to the owner before implementing profile CRUD or real business logic.
 
 ## 18. Known uncertainties and risks
 
@@ -405,7 +403,7 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - Relationship removal was a misunderstanding, not an owner decision. Relationship methods must exist; only relation class imports/return types are disallowed.
 - The permissions table is very wide and legacy-style by explicit instruction.
 - Many tables/models exist without controllers/routes/business logic/tests.
-- `HomeController`/dashboard is incomplete and should be inspected before changing login redirect behavior.
+- `HomeController`/dashboard is deliberately dummy-only; do not mistake the visible counters/panels for implemented business logic.
 - Settings domain matching depends on stored scheme/host conventions and may need normalization later.
 - Migration foreign keys and application deletion rules need a focused audit before production.
 - Payment, WhatsApp and API secret fields exist; encryption/integration behavior is not fully implemented.
@@ -413,4 +411,4 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 
 ---
 
-**Handover state:** Background helper correction and relationship restoration are finished, verified and committed. No remote is configured, so pushing is pending the owner-provided repository URL. UI work stops immediately before creating the reusable authenticated Theme 1 legacy layout partials and refitting the combined profile page into that layout.
+**Handover state:** Background helper correction, relationship restoration, GitHub synchronization, reusable authenticated Theme 1 layout partials and the dummy Theme 1 dashboard are finished and verified. UI work stops immediately before refitting the combined profile page into the completed layout. Continue template migration with dummy data only; real controller/business logic remains intentionally deferred.
