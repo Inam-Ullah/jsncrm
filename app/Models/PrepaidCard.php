@@ -17,4 +17,23 @@ class PrepaidCard extends Model
         'status' => 'boolean',
     ];
 
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
+    }
+
+    public function reseller()
+    {
+        return $this->belongsTo(User::class, 'reseller_id');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function tokens()
+    {
+        return $this->hasMany(PrepaidToken::class);
+    }
 }

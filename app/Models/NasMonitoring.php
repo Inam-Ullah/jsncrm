@@ -16,4 +16,8 @@ class NasMonitoring extends Model
         'checked_at' => 'datetime',
     ];
 
+    public function nas()
+    {
+        return $this->belongsTo(Nas::class);
+    }
 }

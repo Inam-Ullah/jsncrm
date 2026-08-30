@@ -11,4 +11,8 @@ class InventoryItemType extends Model
 
     protected $guarded = [];
 
+    public function items()
+    {
+        return $this->hasMany(InventoryItem::class);
+    }
 }

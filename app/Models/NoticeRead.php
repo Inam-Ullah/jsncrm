@@ -15,4 +15,13 @@ class NoticeRead extends Model
         'read_at' => 'datetime',
     ];
 
+    public function notice()
+    {
+        return $this->belongsTo(Notice::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

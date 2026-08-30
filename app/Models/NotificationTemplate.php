@@ -15,4 +15,13 @@ class NotificationTemplate extends Model
         'status' => 'boolean',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(NotificationMessage::class);
+    }
 }

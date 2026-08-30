@@ -11,4 +11,18 @@ class ActivityLog extends Model
 
     protected $guarded = [];
 
+    public function actionBy()
+    {
+        return $this->belongsTo(User::class, 'action_by_id');
+    }
+
+    public function againstUser()
+    {
+        return $this->belongsTo(User::class, 'against_user_id');
+    }
+
+    public function target()
+    {
+        return $this->morphTo();
+    }
 }

@@ -16,4 +16,28 @@ class Ledger extends Model
         'balance_after' => 'decimal:2',
     ];
 
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function relatedUser()
+    {
+        return $this->belongsTo(User::class, 'related_user_id');
+    }
+
+    public function actionBy()
+    {
+        return $this->belongsTo(User::class, 'action_by');
+    }
 }

@@ -16,4 +16,18 @@ class Nas extends Model
         'checkedTime' => 'datetime',
     ];
 
+    public function monitorings()
+    {
+        return $this->hasMany(NasMonitoring::class);
+    }
+
+    public function tokenCards()
+    {
+        return $this->hasMany(TokenCard::class);
+    }
+
+    public function accessTokens()
+    {
+        return $this->hasMany(AccessToken::class);
+    }
 }

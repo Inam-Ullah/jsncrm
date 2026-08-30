@@ -15,4 +15,28 @@ class TokenCard extends Model
         'status' => 'boolean',
     ];
 
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
+    }
+
+    public function reseller()
+    {
+        return $this->belongsTo(User::class, 'reseller_id');
+    }
+
+    public function nas()
+    {
+        return $this->belongsTo(Nas::class);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function accessTokens()
+    {
+        return $this->hasMany(AccessToken::class);
+    }
 }

@@ -11,4 +11,13 @@ class TicketCategory extends Model
 
     protected $guarded = [];
 
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by_id');
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
 }

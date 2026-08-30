@@ -15,4 +15,8 @@ class LiveGraph extends Model
         'last_updated_at' => 'datetime',
     ];
 
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'username', 'username');
+    }
 }

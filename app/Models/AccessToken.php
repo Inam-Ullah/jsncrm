@@ -25,4 +25,33 @@ class AccessToken extends Model
         'allow_multiple_ip' => 'boolean',
     ];
 
+    public function tokenCard()
+    {
+        return $this->belongsTo(TokenCard::class);
+    }
+
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
+    }
+
+    public function salesPerson()
+    {
+        return $this->belongsTo(User::class, 'sales_person_id');
+    }
+
+    public function nas()
+    {
+        return $this->belongsTo(Nas::class);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 }

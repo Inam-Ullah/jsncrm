@@ -12,3 +12,4 @@ class Permission extends Model
     protected $guarded = [];
 }
 
+

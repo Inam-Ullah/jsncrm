@@ -28,4 +28,18 @@ class FPackage extends Model
         'vat' => 'decimal:2',
     ];
 
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function reseller()
+    {
+        return $this->belongsTo(User::class, 'reseller_id');
+    }
 }

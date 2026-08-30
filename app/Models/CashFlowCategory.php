@@ -11,4 +11,13 @@ class CashFlowCategory extends Model
 
     protected $guarded = [];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function cashFlows()
+    {
+        return $this->hasMany(CashFlow::class, 'category_id');
+    }
 }

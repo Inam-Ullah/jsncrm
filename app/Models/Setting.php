@@ -42,4 +42,8 @@ class Setting extends Model
         'whatsapp_app_secret' => 'encrypted',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

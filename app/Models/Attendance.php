@@ -15,4 +15,13 @@ class Attendance extends Model
         'attendance_date' => 'date',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function markedBy()
+    {
+        return $this->belongsTo(User::class, 'marked_by_id');
+    }
 }

@@ -18,4 +18,23 @@ class Router extends Model
         'status' => 'boolean',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
+    public function monitorings()
+    {
+        return $this->hasMany(RouterMonitoring::class);
+    }
 }

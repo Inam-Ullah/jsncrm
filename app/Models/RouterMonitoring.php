@@ -16,4 +16,8 @@ class RouterMonitoring extends Model
         'checked_at' => 'datetime',
     ];
 
+    public function router()
+    {
+        return $this->belongsTo(Router::class);
+    }
 }

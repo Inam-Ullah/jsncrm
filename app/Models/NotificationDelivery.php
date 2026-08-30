@@ -16,4 +16,8 @@ class NotificationDelivery extends Model
         'received_at' => 'datetime',
     ];
 
+    public function message()
+    {
+        return $this->belongsTo(NotificationMessage::class, 'notification_message_id');
+    }
 }

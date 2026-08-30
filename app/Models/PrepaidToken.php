@@ -22,4 +22,23 @@ class PrepaidToken extends Model
         'used_at' => 'datetime',
     ];
 
+    public function prepaidCard()
+    {
+        return $this->belongsTo(PrepaidCard::class);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function usedByCustomer()
+    {
+        return $this->belongsTo(Customer::class, 'used_by_customer_id');
+    }
+
+    public function salesPerson()
+    {
+        return $this->belongsTo(User::class, 'sales_person_id');
+    }
 }

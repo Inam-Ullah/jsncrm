@@ -17,4 +17,13 @@ class InventoryItem extends Model
         'is_for_sale' => 'boolean',
     ];
 
+    public function type()
+    {
+        return $this->belongsTo(InventoryItemType::class, 'inventory_item_type_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
