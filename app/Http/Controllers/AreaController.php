@@ -59,11 +59,15 @@ class AreaController extends Controller
         if ($request->type == 3) {
             $type = 'sub_area';
             $parentId = $request->area;
-            $parent = Area::where('id', $parentId)->where('type', 'area')->first();
+            $city = Area::where('id', $request->city)->where('type', 'city')->first();
+            $parent = Area::where('id', $parentId)
+                ->where('type', 'area')
+                ->where('parent_id', $request->city)
+                ->first();
 
-            if (!$parent) {
+            if (!$city || !$parent) {
                 return redirect()->back()->withInput()->withErrors([
-                    'area' => 'Please select a valid area.',
+                    'area' => 'Please select an area from the selected city.',
                 ]);
             }
         }

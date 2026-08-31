@@ -16,12 +16,36 @@ $(document).ready(function () {
         }
 
         if (areaType == 3) {
+            cityField.removeClass('hide').show();
             areaField.removeClass('hide').show();
+            $('select.area_city').prop('required', true);
             $('select.area_area').prop('required', true);
+            filterAreaOptions();
         }
     }
 
+    function filterAreaOptions() {
+        var cityId = $('select.area_city').val();
+        var areaSelect = $('select.area_area');
+
+        areaSelect.find('option').each(function () {
+            var option = $(this);
+            var optionCityId = option.data('city-id');
+
+            if (!option.val() || optionCityId == cityId) {
+                option.prop('disabled', false).show();
+            } else {
+                option.prop('disabled', true).hide();
+
+                if (option.is(':selected')) {
+                    areaSelect.val('');
+                }
+            }
+        });
+    }
+
     $(document).on('change', 'select.area_areatype', syncAreaTypeFields);
+    $(document).on('change', 'select.area_city', filterAreaOptions);
     syncAreaTypeFields();
 
     var areaTable = $('.dtAreas');
