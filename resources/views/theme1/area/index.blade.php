@@ -8,13 +8,13 @@
             <div class="col-md-12 col-sm-12 col-xs-12 mt-20">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2><i class="fas fa-map-marker-alt"></i> {{ __('areas') }}</h2>
+                        <h2><i class="fas fa-map-marker-alt"></i> Areas</h2>
 
                         @if(in_array($author->role_id, [1, 2]) || permission('area_add_new'))
                             <h2 class="right">
                                 <button type="button" class="btn btn-zalpro text-white add-areas-modal"
                                     data-toggle="modal" data-target=".add_areas_modal">
-                                    <i class="fas fa-map-marker-alt"></i> {{ __('add_new_area') }}
+                                    <i class="fas fa-map-marker-alt"></i> Add New Area
                                 </button>
                             </h2>
                         @endif
@@ -27,11 +27,11 @@
                             data-url="{{ route('area.getAreas') }}">
                             <thead>
                                 <tr class="headings">
-                                    <th class="column-title">{{ __('id') }}</th>
-                                    <th class="column-title">{{ __('type') }}</th>
-                                    <th class="column-title">{{ __('name') }}</th>
-                                    <th class="column-title">{{ __('users') }}</th>
-                                    <th class="column-title">{{ __('action') }}</th>
+                                    <th class="column-title">ID</th>
+                                    <th class="column-title">Type</th>
+                                    <th class="column-title">Name</th>
+                                    <th class="column-title">Users</th>
+                                    <th class="column-title">Action</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
