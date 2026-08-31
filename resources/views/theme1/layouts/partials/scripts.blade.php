@@ -54,4 +54,3 @@
 <!-- Custom Theme Scripts -->
 <script src="{{ asset('theme1/assets/themes/legacy/js/app.js') }}"></script>
 <script src="{{ asset('theme1/assets/themes/legacy/js/area.js') }}"></script>
-<script src="{{ asset('theme1/assets/themes/legacy/js/isp.js') }}"></script>
