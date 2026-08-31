@@ -12,7 +12,7 @@
 - Web application currently tested at `http://192.168.20.55:8080`
 - The Laravel directory is a Git repository on branch `main` and tracks `origin/main`.
 - GitHub remote: `https://github.com/Inam-Ullah/jsncrm.git`.
-- Latest implementation commit at this handover stage: `a80b7ea` (`Combine legacy role layouts for Theme 1`).
+- Latest implementation commit at this handover stage: `2c79853` (`Use permission relation and direct setting helper`).
 - Database is configured and all currently present migrations have run in batch 1.
 - Seeded data currently includes 12 roles, 2 areas, 7 type rows, 2 users and 2 settings rows.
 
@@ -63,6 +63,9 @@ Completed immediately before handover:
 - Compared both legacy admin-portal and client-portal header/footer sources.
 - Combined three role modes in one sidebar/navbar: Super Admin has ISP/Admin/Area/Settings; Admin-side roles have operational hierarchy/network/accounting menus; Customer/Client has activity/login/connection logs, ledger, invoices, tickets and notices.
 - Restored the common legacy head/footer asset set and corrected script order so jQuery-dependent legacy plugins load cleanly.
+- Updated `HomeController@index` to pass only the authenticated `author` and `optional($author->role->permission)` to the dashboard.
+- Restored the missing `Role::permission()` Eloquent relationship without a relation-class import or typed return.
+- Authenticated Theme 1 layout/profile Blades now call `setting()` directly instead of receiving a `$setting` controller variable.
 
 Current unfinished UI task:
 
@@ -269,6 +272,7 @@ Important current state:
 - Models retain table names, guarded/casts, Eloquent relationship methods and any required authentication traits.
 - `$guarded = []` is intentionally preferred by the owner; validation is expected at controller/request level.
 - Eloquent relationship **methods must remain**. Only relation return-type imports/declarations are forbidden by the project convention.
+- `Role::permission()` is required because `HomeController` resolves `$author->role->permission`; do not remove it.
 - Immediate verification after uploading the staged recovery: relationship calls should total 202; relation-class imports and typed relation returns should both total zero.
 
 ## 12. Controllers, routes and business logic
@@ -277,7 +281,7 @@ Controllers currently present:
 
 - Breeze auth controllers.
 - `AuthenticatedSessionController`: theme login selection, login/logout timestamp updates.
-- `HomeController`: minimal dummy dashboard implementation only. It reads the authenticated user and setting, then returns `theme1.dashboard.index` with an explicit array. No business queries exist yet.
+- `HomeController`: minimal dummy dashboard implementation only. It reads the authenticated user and the optional permission attached through `User → Role → Permission`, then returns `theme1.dashboard.index` with an explicit array. Settings are resolved directly in Blade through `setting()`. No business queries exist yet.
 - `ProfileController`: first-stage combined profile only.
 
 Current custom routes:
@@ -365,6 +369,7 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [x] Configured `origin`, moved to `main`, and pushed the implementation history to GitHub.
 - [x] Combined legacy Super Admin, Admin-side and Client portal layouts into one Theme 1 layout.
 - [x] Restored common legacy layout assets and verified clean desktop/mobile rendering and console output.
+- [x] Connected the dashboard to the role permission relationship and changed authenticated Theme 1 Blades to direct `setting()` helper calls.
 
 ## 16. Pending checklist
 
@@ -417,4 +422,4 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 
 ---
 
-**Handover state:** Background helper correction, relationship restoration, GitHub synchronization, the reusable Theme 1 partials, dummy dashboard and one combined Super Admin/Admin-side/Client layout are finished and verified. UI work stops before migrating the profile or any other legacy page. Continue same-to-same template migration only after layout review, with dummy data and placeholder routes; real controller/business logic remains intentionally deferred.
+**Handover state:** Background helper correction, relationship restoration, GitHub synchronization, the reusable Theme 1 partials, dummy dashboard and one combined Super Admin/Admin-side/Client layout are finished and verified. Dashboard permission data now comes through `User → Role → Permission`, and authenticated Theme 1 Blades resolve settings directly with `setting()`. UI work stops before migrating the profile or any other legacy page. Continue same-to-same template migration only after layout review, with dummy data and placeholder routes; real controller/business logic remains intentionally deferred.
