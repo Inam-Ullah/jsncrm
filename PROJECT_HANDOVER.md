@@ -383,6 +383,7 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [x] Added location-level user counts from `users.city_id`, `users.area_id` and `users.subarea_id`.
 - [x] Verified Area routes, PHP/JavaScript syntax, Blade compilation, desktop/mobile rendering, AJAX rows, modal behavior and edit-page loading; browser console errors were zero.
 - [x] Committed and pushed Area implementation as `756e6a5 Build Area management module`.
+- [x] Replaced unresolved Area translation keys with readable legacy-equivalent English labels and pushed commit `71f6e45 Use readable Area module labels`.
 
 ## 16. Pending checklist
 
