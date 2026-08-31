@@ -12,7 +12,7 @@
 - Web application currently tested at `http://192.168.20.55:8080`
 - The Laravel directory is a Git repository on branch `main` and tracks `origin/main`.
 - GitHub remote: `https://github.com/Inam-Ullah/jsncrm.git`.
-- Latest implementation commit at this handover stage: `241ebc2` (`Migrate legacy Theme 1 dashboard layout`).
+- Latest implementation commit at this handover stage: `a80b7ea` (`Combine legacy role layouts for Theme 1`).
 - Database is configured and all currently present migrations have run in batch 1.
 - Seeded data currently includes 12 roles, 2 areas, 7 type rows, 2 users and 2 settings rows.
 
@@ -47,7 +47,7 @@ The next agent must preserve these decisions:
 
 ## 4. Current stopping point (read this first)
 
-The login system and four login templates are considered final for now. The authenticated Theme 1 shell and first dummy dashboard are now complete and verified. Work stops immediately before refitting the combined profile page into this reusable layout.
+The login system and four login templates are considered final for now. The authenticated Theme 1 shell now combines the legacy Super Admin, Admin-side and Client portal layouts in one reusable Blade structure. Work stops after the combined layout and before migrating profile or other legacy pages.
 
 Completed immediately before handover:
 
@@ -60,12 +60,15 @@ Completed immediately before handover:
 - Created a dummy Theme 1 dashboard and minimal `HomeController@index`; no business queries were added.
 - Reused the existing Gentelella/legacy Theme 1 CSS and JavaScript assets; no replacement dashboard CSS was written.
 - Verified the authenticated dashboard on desktop and a 390-pixel mobile viewport: no horizontal overflow and no browser console errors.
+- Compared both legacy admin-portal and client-portal header/footer sources.
+- Combined three role modes in one sidebar/navbar: Super Admin has ISP/Admin/Area/Settings; Admin-side roles have operational hierarchy/network/accounting menus; Customer/Client has activity/login/connection logs, ledger, invoices, tickets and notices.
+- Restored the common legacy head/footer asset set and corrected script order so jQuery-dependent legacy plugins load cleanly.
 
 Current unfinished UI task:
 
 - A first combined profile controller/view exists and renders, but the profile view is a **temporary standalone layout with custom `profile.css`**.
 - The owner rejected that standalone approach.
-- Next agent must move the combined profile content into the completed Theme 1 layout and remove the temporary custom styling where legacy classes/assets cover it.
+- Do not migrate the profile until the owner has reviewed this combined layout. After approval, migrate each legacy page same-to-same into this shell, starting with the combined profile, and remove temporary custom styling where legacy classes/assets cover it.
 
 Model recovery status at handover:
 
@@ -309,6 +312,7 @@ No substantive service layer exists yet. Do not claim that billing/network busin
 - Layout partials exist for head assets, sidebar, navbar, footer and scripts.
 - Dummy dashboard exists at `resources/views/theme1/dashboard/index.blade.php` and uses legacy classes/assets.
 - Desktop/mobile dashboard render, console and overflow checks passed.
+- The single sidebar/navbar now branches by role to preserve the legacy Super Admin, Admin-side and Client navigation variants.
 
 ### Temporary / must be replaced next
 
@@ -359,6 +363,8 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [x] Created the minimal HomeController and dummy dashboard without business logic.
 - [x] Verified the dashboard on desktop/mobile with no horizontal overflow or console errors.
 - [x] Configured `origin`, moved to `main`, and pushed the implementation history to GitHub.
+- [x] Combined legacy Super Admin, Admin-side and Client portal layouts into one Theme 1 layout.
+- [x] Restored common legacy layout assets and verified clean desktop/mobile rendering and console output.
 
 ## 16. Pending checklist
 
@@ -383,11 +389,11 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 2. Verify the clean working tree and that `main` matches `origin/main` before starting a new change.
 3. After every future coherent change: verify it, create a focused Git commit, and push it to the configured remote as explicitly required by the owner.
 4. Do **not** run migrations, rollback, fresh seed or destructive SQL unless the owner explicitly asks.
-5. Treat the completed Theme 1 layout/partials and dummy dashboard as the approved shell; do not rebuild them from scratch.
+5. Treat the combined Theme 1 layout/partials as the base shell. It intentionally contains three role modes in one file; do not split Super Admin, Admin and Client back into separate layouts.
 6. Translate remaining legacy PHP/CodeIgniter calls to existing Laravel variables/helpers without `@php`, type declarations, strict comparisons or facades where helpers suffice. Eloquent relationship methods are allowed and expected; relation return-type classes are not.
 7. Reuse URLs under `theme1/assets/themes/legacy/...`; do not write a replacement CSS theme.
-8. Keep sidebar permissions as dummy controller-provided flags/role `if/elseif` during this template stage.
-9. Convert the temporary profile page to the new layout. Compare it against all legacy profile views and combine the role variants into one page.
+8. Current layout links are intentionally placeholders where controllers/routes are not migrated. Replace each `#` only when that legacy page receives its Laravel route.
+9. After owner approval, convert the temporary profile page to the new layout. Compare it against all legacy profile views and combine the role variants into one page.
 10. Verify with:
     - PHP syntax checks,
     - `php artisan view:clear && php artisan view:cache`,
@@ -411,4 +417,4 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 
 ---
 
-**Handover state:** Background helper correction, relationship restoration, GitHub synchronization, reusable authenticated Theme 1 layout partials and the dummy Theme 1 dashboard are finished and verified. UI work stops immediately before refitting the combined profile page into the completed layout. Continue template migration with dummy data only; real controller/business logic remains intentionally deferred.
+**Handover state:** Background helper correction, relationship restoration, GitHub synchronization, the reusable Theme 1 partials, dummy dashboard and one combined Super Admin/Admin-side/Client layout are finished and verified. UI work stops before migrating the profile or any other legacy page. Continue same-to-same template migration only after layout review, with dummy data and placeholder routes; real controller/business logic remains intentionally deferred.
