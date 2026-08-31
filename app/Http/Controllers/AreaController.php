@@ -98,7 +98,11 @@ class AreaController extends Controller
             return redirect()->back()->withErrors(['error' => $msg]);
         }
 
-        $area = Area::findOrFail($id);
+        $area = Area::find($id);
+
+        if (!$area) {
+            return redirect()->route('area')->withErrors(['error' => 'Location not found.']);
+        }
 
         return view(theme('area.edit'), [
             'author' => $author,
@@ -116,11 +120,19 @@ class AreaController extends Controller
         }
 
         $request->validate([
-            'id' => 'required|exists:areas,id',
+            'id' => 'required',
             'name' => 'required|max:100',
         ]);
 
-        $area = Area::findOrFail($request->id);
+        $area = Area::find($request->id);
+
+        if (!$area) {
+            if ($request->expectsJson()) {
+                return response()->json(['status' => false, 'message' => 'Location not found.'], 404);
+            }
+
+            return redirect()->route('area')->withErrors(['error' => 'Location not found.']);
+        }
 
         $duplicate = Area::where('type', $area->type)
             ->where('parent_id', $area->parent_id)
@@ -152,7 +164,15 @@ class AreaController extends Controller
             return redirect()->back()->withErrors(['error' => $msg]);
         }
 
-        $area = Area::findOrFail($id);
+        $area = Area::find($id);
+
+        if (!$area) {
+            if (request()->expectsJson()) {
+                return response()->json(['status' => false, 'message' => 'Location not found.'], 404);
+            }
+
+            return redirect()->route('area')->withErrors(['error' => 'Location not found.']);
+        }
 
         if ($area->children()->exists()) {
             return redirect()->back()->withErrors([
@@ -263,6 +283,11 @@ class AreaController extends Controller
         $html = '<option value="">' . __('select_area') . '</option>';
 
         if ($cityId) {
+            $cityExists = Area::where('id', $cityId)->where('type', 'city')->exists();
+            if (!$cityExists) {
+                return response()->json(0);
+            }
+
             $areas = Area::where('type', 'area')
                 ->where('parent_id', $cityId)
                 ->orderBy('name')
@@ -283,6 +308,11 @@ class AreaController extends Controller
         $html = '<option value="">' . __('select_subarea') . '</option>';
 
         if ($areaId) {
+            $areaExists = Area::where('id', $areaId)->where('type', 'area')->exists();
+            if (!$areaExists) {
+                return response()->json(0);
+            }
+
             $subareas = Area::where('type', 'sub_area')
                 ->where('parent_id', $areaId)
                 ->orderBy('name')

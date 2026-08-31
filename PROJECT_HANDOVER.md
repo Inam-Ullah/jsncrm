@@ -390,6 +390,7 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [x] Preserved existing working Area and Sub-Area JS logic in `area.js` completely intact without refactoring, adding `loadCitiesByAjax()` to populate City dropdown and trigger `chosen:updated`.
 - [x] Created reusable `activity_log()` helper in `app/Helpers/helpers.php` (no business service layer created, as per convention).
 - [x] Integrated `activity_log()` in login (`AuthenticatedSessionController@store`), logout (`AuthenticatedSessionController@destroy`), and Area CRUD operations (`AreaController` `insert`, `update`, `delete`), ensuring sensitive data is never logged.
+- [x] Replaced `findOrFail()` with `find()` and custom error handling in `AreaController` (`edit`, `update`, `delete`, `getAreaByAjax`, `getSubAreaByAjax`), returning user-friendly redirect messages (`'Location not found.'`) or JSON `0`/404 error responses for invalid record IDs instead of generic production 404 pages.
 
 ## 16. Pending checklist
 
