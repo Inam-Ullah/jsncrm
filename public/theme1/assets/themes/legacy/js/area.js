@@ -1,5 +1,109 @@
 $(document).ready(function () {
 
+    function syncAreaTypeFields() {
+        var areaType = $('select.area_areatype').val();
+        var cityField = $('div.area_citydiv');
+        var areaField = $('div.area_areadiv');
+
+        cityField.addClass('hide').hide();
+        areaField.addClass('hide').hide();
+        $('select.area_city').prop('required', false);
+        $('select.area_area').prop('required', false);
+
+        if (areaType == 2) {
+            cityField.removeClass('hide').show();
+            $('select.area_city').prop('required', true);
+        }
+
+        if (areaType == 3) {
+            areaField.removeClass('hide').show();
+            $('select.area_area').prop('required', true);
+        }
+    }
+
+    $(document).on('change', 'select.area_areatype', syncAreaTypeFields);
+    syncAreaTypeFields();
+
+    var areaTable = $('.dtAreas');
+
+    if (areaTable.length && $.fn.DataTable) {
+        areaTable.DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: areaTable.data('url'),
+                type: 'POST'
+            },
+            dom: 'lfBrtip',
+            searching: false,
+            info: true,
+            responsive: true,
+            stateSave: true,
+            fixedHeader: true,
+            pageLength: 50,
+            lengthMenu: [10, 25, 50, 100, 500, 1000],
+            buttons: [
+                {
+                    extend: 'print',
+                    text: '<i class="fas fa-print"></i> Print',
+                    titleAttr: 'Print',
+                    className: 'btn-primary'
+                },
+                {
+                    extend: 'copy',
+                    text: '<i class="fas fa-copy fa-fw"></i> Copy',
+                    titleAttr: 'Copy',
+                    className: 'btn-primary'
+                },
+                {
+                    extend: 'pdf',
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                    titleAttr: 'PDF',
+                    className: 'btn-primary'
+                },
+                {
+                    extend: 'excel',
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    titleAttr: 'Excel',
+                    className: 'btn-primary'
+                },
+                {
+                    extend: 'csv',
+                    text: '<i class="fas fa-file-csv"></i> CSV',
+                    titleAttr: 'CSV',
+                    className: 'btn-primary'
+                },
+                {
+                    extend: 'colvis',
+                    text: '<i class="fas fa-eye-slash"></i> View',
+                    titleAttr: 'Visibility',
+                    collectionLayout: 'fixed two-column'
+                }
+            ],
+            drawCallback: function () {
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+        });
+    }
+
+    $(document).on('click', '.dtAreas a.area-delete', function (event) {
+        event.preventDefault();
+        var deleteUrl = $(this).attr('href');
+
+        $.confirm({
+            title: 'Delete',
+            content: 'Are You Sure?',
+            type: 'red',
+            typeAnimated: true,
+            buttons: {
+                Cancel: function () {},
+                Ok: function () {
+                    window.location.href = deleteUrl;
+                }
+            }
+        });
+    });
+
 
     //1st one for on same page if two are needs 
     //on select city show area

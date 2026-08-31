@@ -85,3 +85,12 @@ if (!function_exists('background')) {
         return $background;
     }
 }
+
+if (!function_exists('permission')) {
+    function permission($module)
+    {
+        $permission = optional(auth()->user()->role->permission);
+
+        return $permission->{$module};
+    }
+}
