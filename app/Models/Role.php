@@ -14,4 +14,9 @@ class Role extends Model
     protected $casts = [
         'permission_id' => 'integer',
     ];
+
+    public function permission()
+    {
+        return $this->belongsTo(Permission::class);
+    }
 }

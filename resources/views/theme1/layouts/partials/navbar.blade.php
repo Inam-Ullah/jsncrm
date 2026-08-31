@@ -7,7 +7,7 @@
 
             <ul class="nav navbar-nav navbar-left">
                 <li class="current-admin-info">
-                    <a href="{{ route('home') }}">{{ $setting->name ?? config('app.name') }} | {{ $setting->slogan ?? 'ISP Management' }}</a>
+                    <a href="{{ route('home') }}">{{ setting()->name ?? config('app.name') }} | {{ setting()->slogan ?? 'ISP Management' }}</a>
                 </li>
             </ul>
 

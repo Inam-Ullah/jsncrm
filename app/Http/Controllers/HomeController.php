@@ -6,11 +6,12 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $author = auth()->user();
+        $author     = auth()->user();
+        $permission = optional($author->role->permission);
 
         return view('theme1.dashboard.index', [
-            'author' => $author,
-            'setting' => setting(),
+            'author'     => $author,
+            'permission' => $permission,
         ]);
     }
 }

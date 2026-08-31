@@ -2,7 +2,7 @@
     <div class="left_col scroll-view">
         <div class="navbar nav_title">
             <a href="{{ route('home') }}" class="site_title">
-                <img class="logo" src="{{ logo() }}" alt="{{ $setting->name ?? 'JSN ISP CRM' }}">
+                <img class="logo" src="{{ logo() }}" alt="{{ setting()->name ?? 'JSN ISP CRM' }}">
             </a>
         </div>
 

@@ -82,7 +82,6 @@ class ProfileController extends Controller
             'roleName' => $roleName,
             'permissions' => $permissions,
             'stats' => $stats,
-            'setting' => setting(),
         ]);
     }
 }

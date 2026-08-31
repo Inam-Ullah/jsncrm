@@ -23,8 +23,8 @@
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title">
                         <a href="{{ route('home') }}" class="site_title">
-                            <img src="{{ logo('theme1') }}" alt="{{ $setting->name }} logo">
-                            <span>{{ $setting->name }}</span>
+                            <img src="{{ logo() }}" alt="{{ setting()->name }} logo">
+                            <span>{{ setting()->name }}</span>
                         </a>
                     </div>
 
@@ -226,9 +226,9 @@
             </main>
 
             <footer class="profile-footer">
-                {{ $setting->name }} | {{ $setting->slogan }}
-                @if ($setting->copyright)
-                    | {{ $setting->copyright }}
+                {{ setting()->name }} | {{ setting()->slogan }}
+                @if (setting()->copyright)
+                    | {{ setting()->copyright }}
                 @endif
             </footer>
         </div>
