@@ -17,8 +17,12 @@ $(document).ready(function () {
             var selectedVal = $elem.data('selected');
 
             if ($elem.find('option[value!=""]').length > 0) {
-                if (selectedVal && !$elem.val()) {
+                if (selectedVal) {
                     $elem.val(selectedVal);
+                    var $opt = $elem.find('option[value="' + selectedVal + '"]');
+                    if ($opt.length && !$opt.text().includes('(*)')) {
+                        $opt.text($opt.text() + ' (*)');
+                    }
                 }
                 if ($.fn.chosen) {
                     $elem.trigger('chosen:updated');
@@ -42,6 +46,10 @@ $(document).ready(function () {
                         $elem.empty().append(data);
                         if (selectedVal) {
                             $elem.val(selectedVal);
+                            var $opt = $elem.find('option[value="' + selectedVal + '"]');
+                            if ($opt.length && !$opt.text().includes('(*)')) {
+                                $opt.text($opt.text() + ' (*)');
+                            }
                         }
                     }
                     if ($.fn.chosen) {
