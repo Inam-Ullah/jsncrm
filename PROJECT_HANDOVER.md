@@ -383,7 +383,8 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [x] Added location-level user counts from `users.city_id`, `users.area_id` and `users.subarea_id`.
 - [x] Verified Area routes, PHP/JavaScript syntax, Blade compilation, desktop/mobile rendering, AJAX rows, modal behavior and edit-page loading; browser console errors were zero.
 - [x] Committed and pushed Area implementation as `756e6a5 Build Area management module`.
-- [x] Replaced unresolved Area translation keys with readable legacy-equivalent English labels and pushed commit `71f6e45 Use readable Area module labels`.
+- [x] Restored the owner's `__()` translation calls after the temporary hard-coded-label change; commit `427c7bc Restore Area translations and hierarchy` supersedes the label change.
+- [x] Enforced Sub Area ownership on both layers: the form filters Areas by selected City using `data-city-id`, and the controller requires the selected Area's `parent_id` to match that City.
 
 ## 16. Pending checklist
 
@@ -439,6 +440,7 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - GET logout is susceptible to cross-site logout requests because it has no CSRF token. This is an explicit owner decision; do not silently change it back to POST.
 - Area deletion also currently uses a GET route to preserve the legacy `a.delete` confirmation flow. It is protected by authentication and controller permission checks, but it has the same CSRF/idempotency concern and must not be silently changed without owner approval.
 - No migration or seeder was run for the Area module. The existing normalized `areas` table and seeded Rahim Yar Khan/Gulshan Iqbal records were used as-is.
+- Do not replace Area Blade translation calls with hard-coded labels. Translation keys are intentional owner work even if a missing locale temporarily displays the key itself.
 - Legacy files are generated/obfuscated in places. Use them as UI/schema behavior references, not as code to copy blindly.
 
 ---
