@@ -333,11 +333,13 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - `app/Http/Controllers/Auth/AuthenticatedSessionController.php`
 - `app/Http/Controllers/ProfileController.php`
 - `app/Http/Controllers/HomeController.php`
+- `app/Http/Controllers/AreaController.php`
 - `routes/web.php`
 - All files in `app/Models/` (relationship methods must be restored from the staged corrected copies; only relation type classes/imports are removed)
 - `resources/views/auth/theme1/login.blade.php` through `theme4/login.blade.php`
 - `resources/views/theme1/profile/index.blade.php` (temporary)
 - `resources/views/theme1/dashboard/index.blade.php`
+- `resources/views/theme1/area/{index,insert,edit}.blade.php`
 - `resources/views/theme1/layouts/app.blade.php`
 - `resources/views/theme1/layouts/partials/{head,sidebar,navbar,footer,scripts}.blade.php`
 - `resources/views/components/nav-link.blade.php`
@@ -345,6 +347,7 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - `resources/views/components/dropdown.blade.php`
 - `resources/views/components/modal.blade.php`
 - `public/theme1/assets/css/profile.css` (temporary)
+- `public/theme1/assets/themes/legacy/js/area.js`
 - `public/theme1..theme4/assets/css/login.css`
 - All migration/model/seeder files described above.
 
@@ -372,6 +375,14 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [x] Restored common legacy layout assets and verified clean desktop/mobile rendering and console output.
 - [x] Connected the dashboard to the role permission relationship and changed authenticated Theme 1 Blades to direct `setting()` helper calls.
 - [x] Converted logout from POST forms to the owner-requested GET route and updated its feature test.
+- [x] Completed the first authenticated CRUD module migration: Area management.
+- [x] Added Area list/add/edit/update/delete routes and controller methods over the normalized `areas` table.
+- [x] Migrated the legacy Area UI to Theme 1 Blade without `@php`, inline CSS or inline page JavaScript.
+- [x] Added external `area.js` DataTable/AJAX behavior, export buttons, modal hierarchy switching and delegated delete confirmation.
+- [x] Preserved `city → area → sub_area` hierarchy and prevented deletion while child locations or assigned users exist.
+- [x] Added location-level user counts from `users.city_id`, `users.area_id` and `users.subarea_id`.
+- [x] Verified Area routes, PHP/JavaScript syntax, Blade compilation, desktop/mobile rendering, AJAX rows, modal behavior and edit-page loading; browser console errors were zero.
+- [x] Committed and pushed Area implementation as `756e6a5 Build Area management module`.
 
 ## 16. Pending checklist
 
@@ -388,30 +399,34 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [ ] Implement customer/RADIUS lifecycle, CoA, expiration/disable policy switching.
 - [ ] Implement controllers/routes/views/AJAX for the many schema-only modules.
 - [ ] Add authorization middleware/policies or approved controller checks after owner confirms design.
+- [ ] Add focused automated Feature tests for Area create/update/delete validation; current verification is syntax, route, Blade and browser based.
+- [ ] Decide whether other destructive module routes should follow the legacy GET pattern or use POST/DELETE. Area delete currently follows the legacy confirmed-link GET flow.
 - [ ] Add validation, tests, production security, secret encryption and seeded-password rotation.
 
 ## 17. Immediate continuation instructions for Anti-Gravity
 
 1. Read this file and inspect live files; do not restart schema design.
-2. Verify the clean working tree and that `main` matches `origin/main` before starting a new change.
+2. Inspect `git status` before starting. The live server currently has pre-existing uncommitted layout/global-controller/asset changes; preserve them and make focused commits instead of resetting or staging everything. Verify committed `main` against `origin/main` separately.
 3. After every future coherent change: verify it, create a focused Git commit, and push it to the configured remote as explicitly required by the owner.
 4. Do **not** run migrations, rollback, fresh seed or destructive SQL unless the owner explicitly asks.
 5. Treat the combined Theme 1 layout/partials as the base shell. It intentionally contains three role modes in one file; do not split Super Admin, Admin and Client back into separate layouts.
 6. Translate remaining legacy PHP/CodeIgniter calls to existing Laravel variables/helpers without `@php`, type declarations, strict comparisons or facades where helpers suffice. Eloquent relationship methods are allowed and expected; relation return-type classes are not.
 7. Reuse URLs under `theme1/assets/themes/legacy/...`; do not write a replacement CSS theme.
-8. Current layout links are intentionally placeholders where controllers/routes are not migrated. Replace each `#` only when that legacy page receives its Laravel route.
-9. After owner approval, convert the temporary profile page to the new layout. Compare it against all legacy profile views and combine the role variants into one page.
-10. Verify with:
+8. Area is the first completed module and is no longer a placeholder. Its route is `/area`, its server-side list endpoint is `POST /area/getAreas`, and its Blade files are under `resources/views/theme1/area/`.
+9. When continuing another module, follow the Area pattern: inspect the live CI3 controller/view/JS first, map it to the normalized Laravel schema, keep page JavaScript external, then verify desktop/mobile before committing.
+10. After owner approval, convert the temporary profile page to the new layout. Compare it against all legacy profile views and combine the role variants into one page.
+11. Verify with:
     - PHP syntax checks,
     - `php artisan view:clear && php artisan view:cache`,
-    - `php artisan route:list --path=profile`,
+    - `php artisan route:list --path=<module>`,
     - authenticated Super Admin/Admin browser checks on desktop/mobile,
     - console errors and horizontal overflow.
-11. Present the profile visually to the owner before implementing profile CRUD or real business logic.
+12. Present each migrated page visually to the owner before expanding its business logic beyond the agreed module scope.
 
 ## 18. Known uncertainties and risks
 
 - Git history begins with the late initial snapshot; changes before that snapshot have no granular commit history. Earlier “added/removed/renamed” information is reconstructed from current migrations, live schema and approved decisions.
+- The live worktree is intentionally not clean after the Area commit because unrelated owner work remains uncommitted (Theme 1 layout/dashboard assets, GlobalController/routes, permission migration edits and imported macOS metadata). Do not discard, overwrite or bulk-commit those changes; use focused staging as Area commit `756e6a5` did.
 - All current migrations are already run, despite earlier stages where they had not yet been run. Treat the current database as live state.
 - Relationship removal was a misunderstanding, not an owner decision. Relationship methods must exist; only relation class imports/return types are disallowed.
 - The permissions table is very wide and legacy-style by explicit instruction.
@@ -421,8 +436,10 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - Migration foreign keys and application deletion rules need a focused audit before production.
 - Payment, WhatsApp and API secret fields exist; encryption/integration behavior is not fully implemented.
 - GET logout is susceptible to cross-site logout requests because it has no CSRF token. This is an explicit owner decision; do not silently change it back to POST.
+- Area deletion also currently uses a GET route to preserve the legacy `a.delete` confirmation flow. It is protected by authentication and controller permission checks, but it has the same CSRF/idempotency concern and must not be silently changed without owner approval.
+- No migration or seeder was run for the Area module. The existing normalized `areas` table and seeded Rahim Yar Khan/Gulshan Iqbal records were used as-is.
 - Legacy files are generated/obfuscated in places. Use them as UI/schema behavior references, not as code to copy blindly.
 
 ---
 
-**Handover state:** Background helper correction, relationship restoration, GitHub synchronization, the reusable Theme 1 partials, dummy dashboard and one combined Super Admin/Admin-side/Client layout are finished and verified. Dashboard permission data now comes through `User → Role → Permission`, and authenticated Theme 1 Blades resolve settings directly with `setting()`. UI work stops before migrating the profile or any other legacy page. Continue same-to-same template migration only after layout review, with dummy data and placeholder routes; real controller/business logic remains intentionally deferred.
+**Handover state:** Background helper correction, relationship restoration, GitHub synchronization, the reusable Theme 1 partials, dummy dashboard and one combined Super Admin/Admin-side/Client layout are finished and verified. Dashboard permission data comes through `User → Role → Permission`, and authenticated Theme 1 Blades resolve settings directly with `setting()`. Area management is now the first completed legacy-to-Laravel module: full hierarchy CRUD, permissions, AJAX DataTable, user counts and responsive Theme 1 views are implemented and pushed. The database was not migrated or reseeded for this module. Continue with the next owner-selected legacy module from this exact point; do not restart schema or layout work.
