@@ -14,7 +14,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="quick_access">
                     @if($author->role_id == 7)
-                        <a href="#" onclick="event.preventDefault(); document.getElementById('navbar-logout-form').submit();">
+                        <a href="{{ route('logout') }}">
                             <i class="fas fa-times-circle fa-fw"></i> Logout
                         </a>
                     @else
@@ -31,7 +31,7 @@
                                 <li><a href="#"><i class="fas fa-headset fa-fw"></i> Support</a></li>
                                 <li><a href="#"><i class="fas fa-bell fa-fw"></i> Notices</a></li>
                             @endif
-                            <li><a href="#" onclick="event.preventDefault(); document.getElementById('navbar-logout-form').submit();"><i class="fas fa-times-circle fa-fw"></i> Logout</a></li>
+                            <li><a href="{{ route('logout') }}"><i class="fas fa-times-circle fa-fw"></i> Logout</a></li>
                         </ul>
                     @endif
                 </li>
@@ -48,6 +48,4 @@
             </ul>
         </nav>
     </div>
-
-    <form id="navbar-logout-form" method="POST" action="{{ route('logout') }}">@csrf</form>
 </div>

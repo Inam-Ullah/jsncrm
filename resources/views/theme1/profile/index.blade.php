@@ -70,12 +70,9 @@
                                 </a>
                             </li>
                             <li>
-                                <form method="POST" action="{{ route('logout') }}" class="profile-logout-form">
-                                    @csrf
-                                    <button type="submit" class="profile-logout-button">
-                                        <i class="fas fa-sign-out-alt"></i> Log Out
-                                    </button>
-                                </form>
+                                <a href="{{ route('logout') }}" class="profile-logout-button">
+                                    <i class="fas fa-sign-out-alt"></i> Log Out
+                                </a>
                             </li>
                         </ul>
                     </nav>

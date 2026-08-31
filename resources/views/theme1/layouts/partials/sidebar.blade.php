@@ -91,11 +91,9 @@
                         @endif
                     @endif
 
-                    <li><a href="#" onclick="event.preventDefault(); document.getElementById('sidebar-logout-form').submit();"><i class="fas fa-times-circle"></i> Logout</a></li>
+                    <li><a href="{{ route('logout') }}"><i class="fas fa-times-circle"></i> Logout</a></li>
                 </ul>
             </div>
         </div>
-
-        <form id="sidebar-logout-form" method="POST" action="{{ route('logout') }}">@csrf</form>
     </div>
 </div>
