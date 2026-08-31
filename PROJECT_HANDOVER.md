@@ -12,7 +12,7 @@
 - Web application currently tested at `http://192.168.20.55:8080`
 - The Laravel directory is a Git repository on branch `main` and tracks `origin/main`.
 - GitHub remote: `https://github.com/Inam-Ullah/jsncrm.git`.
-- Latest implementation commit at this handover stage: `2c79853` (`Use permission relation and direct setting helper`).
+- Latest implementation commit at this handover stage: `54cc199` (`Use GET route for logout`).
 - Database is configured and all currently present migrations have run in batch 1.
 - Seeded data currently includes 12 roles, 2 areas, 7 type rows, 2 users and 2 settings rows.
 
@@ -97,6 +97,7 @@ Legacy reference files:
 - Breeze-style authentication routes/controllers are installed.
 - One login system is used for every role; there are no separate admin/client portals.
 - On login, `last_login_at` is updated. On logout, `last_logout_at` is updated.
+- Logout is intentionally a protected `GET /logout` route by owner instruction; Theme 1 logout controls are direct links rather than POST forms.
 - `AuthenticatedSessionController::create()` selects `auth.theme{login_theme}.login` and passes `setting` as an explicit array.
 - Four templates exist: `resources/views/auth/theme1` through `theme4`.
 
@@ -370,6 +371,7 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [x] Combined legacy Super Admin, Admin-side and Client portal layouts into one Theme 1 layout.
 - [x] Restored common legacy layout assets and verified clean desktop/mobile rendering and console output.
 - [x] Connected the dashboard to the role permission relationship and changed authenticated Theme 1 Blades to direct `setting()` helper calls.
+- [x] Converted logout from POST forms to the owner-requested GET route and updated its feature test.
 
 ## 16. Pending checklist
 
@@ -418,6 +420,7 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - Settings domain matching depends on stored scheme/host conventions and may need normalization later.
 - Migration foreign keys and application deletion rules need a focused audit before production.
 - Payment, WhatsApp and API secret fields exist; encryption/integration behavior is not fully implemented.
+- GET logout is susceptible to cross-site logout requests because it has no CSRF token. This is an explicit owner decision; do not silently change it back to POST.
 - Legacy files are generated/obfuscated in places. Use them as UI/schema behavior references, not as code to copy blindly.
 
 ---
