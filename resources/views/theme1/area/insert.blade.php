@@ -36,11 +36,6 @@
                         <div class="col-md-7 col-sm-7 col-xs-12">
                             <select class="form-control area_city chosen-select" name="city">
                                 <option value="">{{ __('select_city') }}</option>
-                                @foreach($cities as $city)
-                                    <option value="{{ $city->id }}" @selected(old('city') == $city->id)>
-                                        {{ $city->name }}
-                                    </option>
-                                @endforeach
                             </select>
                         </div>
                     </div>

@@ -8,6 +8,38 @@ $(document).ready(function () {
 
     initChosen('select.chosen-select, select.chosen');
 
+    function loadCitiesByAjax($targetCitySelect) {
+        var $citySelect = $targetCitySelect || $('select.area_city, select.city, .filter_modal select.filterCity');
+        if (!$citySelect.length) return;
+
+        if ($citySelect.find('option[value!=""]').length > 0) return;
+
+        var url = (typeof baseurl !== 'undefined' ? baseurl : '/') + 'area/getCitiesByAjax';
+        $.ajax({
+            type: 'POST',
+            url: url,
+            dataType: 'json',
+            beforeSend: function () {
+                $('div#loading').delay(100).fadeIn();
+            },
+            success: function (data) {
+                $('div#loading').delay(100).fadeOut('slow');
+                if (data && data != 0) {
+                    $citySelect.empty().append(data);
+                }
+                if ($.fn.chosen) {
+                    $citySelect.trigger('chosen:updated');
+                }
+            },
+            error: function () {
+                $('div#loading').delay(100).fadeOut('slow');
+                if ($.fn.chosen) {
+                    $citySelect.trigger('chosen:updated');
+                }
+            }
+        });
+    }
+
     function syncAreaTypeFields() {
         var areaType = $('select.area_areatype').val();
         var cityField = $('div.area_citydiv');
@@ -21,6 +53,7 @@ $(document).ready(function () {
         if (areaType == 2) {
             cityField.removeClass('hide').show();
             $('select.area_city').prop('required', true);
+            loadCitiesByAjax($('select.area_city'));
             if ($.fn.chosen) {
                 $('select.area_city').trigger('chosen:updated');
             }
@@ -31,6 +64,7 @@ $(document).ready(function () {
             areaField.removeClass('hide').show();
             $('select.area_city').prop('required', true);
             $('select.area_area').prop('required', true);
+            loadCitiesByAjax($('select.area_city'));
             if ($.fn.chosen) {
                 $('select.area_city').trigger('chosen:updated');
                 $('select.area_area').trigger('chosen:updated');
@@ -42,6 +76,7 @@ $(document).ready(function () {
     syncAreaTypeFields();
 
     $('.add_areas_modal').on('shown.bs.modal', function () {
+        loadCitiesByAjax($(this).find('select.area_city'));
         if ($.fn.chosen) {
             $(this).find('select.chosen-select, select.chosen, select.area_city, select.area_area').chosen({ width: '100%' }).trigger('chosen:updated');
         }

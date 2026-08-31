@@ -30,11 +30,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/edit/{id}', [AreaController::class, 'edit'])->name('area.edit');
         Route::get('/delete/{id}', [AreaController::class, 'delete'])->name('area.delete');
         Route::post('/getAreas', [AreaController::class, 'getAreas'])->name('area.getAreas');
+        Route::post('/getCitiesByAjax', [AreaController::class, 'getCitiesByAjax'])->name('area.getCitiesByAjax');
         Route::post('/getAreaByAjax', [AreaController::class, 'getAreaByAjax'])->name('area.getAreaByAjax');
         Route::post('/getSubAreaByAjax', [AreaController::class, 'getSubAreaByAjax'])->name('area.getSubAreaByAjax');
         Route::post('/update', [AreaController::class, 'update'])->name('area.update');
     });
 
+    Route::post('/admin_portal/user/user/getCitiesByAjax', [AreaController::class, 'getCitiesByAjax']);
     Route::post('/admin_portal/user/user/getAreaByAjax', [AreaController::class, 'getAreaByAjax']);
     Route::post('/admin_portal/user/user/getSubAreaByAjax', [AreaController::class, 'getSubAreaByAjax']);
 });

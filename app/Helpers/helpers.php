@@ -94,3 +94,92 @@ if (!function_exists('permission')) {
         return $permission->{$module};
     }
 }
+
+if (!function_exists('shortName')) {
+    function shortName() {
+        $name = trim(setting()->name ?? config('app.name'));
+
+        $words = preg_split('/\s+/', $name);
+
+        if (count($words) === 1) {
+            $shortName = strtoupper(substr($words[0], 0, 1));
+        } else {
+            $shortName = strtoupper(
+                substr($words[0], 0, 1) .
+                substr($words[1], 0, 1)
+            );
+        }
+        return $shortName;
+    }
+}
+
+if (!function_exists('timezone')) {
+    function timezone() {
+        return setting()->timezone ?? config('app.timezone');
+    }
+}
+
+if (!function_exists('photo')) {
+    function photo($str)
+    {
+        if ($str) {
+            $path = public_path('theme1/assets/images/final/' . $str);
+
+            if (file_exists($path)) {
+                return asset('theme1/assets/images/final/' . $str);
+            }
+        }
+
+        return asset('theme1/assets/system/images/user.png');
+    }
+}
+
+if (!function_exists('langFlag')) {
+    function langFlag($str)
+    {
+        if ($str) {
+            $file = strtolower(trim($str)) . '.png';
+
+            $path = public_path(
+                'theme1/assets/system/images/language/' . $file
+            );
+
+            if (file_exists($path)) {
+                return asset(
+                    'theme1/assets/system/images/language/' . $file
+                );
+            }
+        }
+
+        return asset(
+            'theme1/assets/system/images/language/english.png'
+        );
+    }
+}
+
+if (!function_exists('theme')) {
+    function theme($str)
+    {
+        if(setting()->dashboard_theme && setting()->dashboard_theme != 0) {
+            $theme = 'theme' . setting()->dashboard_theme . '.' . $str;
+        } else {
+            $theme = 'theme1.' . $str;
+        }
+        return $theme;
+    }
+}
+
+if (!function_exists('activity_log')) {
+    function activity_log($activity, $targetType = null, $targetId = null, $againstUserId = null)
+    {
+        return \App\Models\ActivityLog::create([
+            'action_by_id'    => auth()->id(),
+            'against_user_id' => $againstUserId,
+            'activity'        => substr($activity, 0, 255),
+            'target_type'     => $targetType ? (is_object($targetType) ? get_class($targetType) : $targetType) : null,
+            'target_id'       => $targetId ?? (is_object($targetType) ? optional($targetType)->id : null),
+            'ip_address'      => request()->ip(),
+            'user_agent'      => request()->userAgent(),
+        ]);
+    }
+}

@@ -17,11 +17,8 @@ class AreaController extends Controller
             return redirect()->back()->withErrors(['error' => $msg]);
         }
 
-        $cities = Area::where('type', 'city')->orderBy('name')->get();
-
         return view(theme('area.index'), [
             'author' => $author,
-            'cities' => $cities,
         ]);
     }
 
@@ -81,11 +78,13 @@ class AreaController extends Controller
             ]);
         }
 
-        Area::create([
+        $newArea = Area::create([
             'parent_id' => $parentId,
             'type' => $type,
             'name' => trim($request->name),
         ]);
+
+        activity_log('Created location (' . ucfirst($type) . '): ' . $newArea->name, 'Area', $newArea->id);
 
         return redirect()->route('area')->with('success', 'Area Successfully Added');
     }
@@ -139,6 +138,8 @@ class AreaController extends Controller
             'name' => trim($request->name),
         ]);
 
+        activity_log('Updated location (' . ucfirst($area->type) . '): ' . $area->name, 'Area', $area->id);
+
         return redirect()->route('area')->with('success', 'Area Successfully Updated');
     }
 
@@ -175,9 +176,23 @@ class AreaController extends Controller
             ]);
         }
 
+        activity_log('Deleted location (' . ucfirst($area->type) . '): ' . $area->name, 'Area', $area->id);
         $area->delete();
 
         return redirect()->route('area')->with('success', 'Area Deleted Successfully');
+    }
+
+    public function getCitiesByAjax(Request $request)
+    {
+        $cities = Area::where('type', 'city')->orderBy('name')->get();
+
+        $html = '<option value="">' . __('select_city') . '</option>';
+
+        foreach ($cities as $city) {
+            $html .= '<option value="' . $city->id . '">' . e($city->name) . '</option>';
+        }
+
+        return response()->json($html);
     }
 
     public function getAreas(Request $request)

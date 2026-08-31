@@ -385,10 +385,11 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [x] Committed and pushed Area implementation as `756e6a5 Build Area management module`.
 - [x] Restored the owner's `__()` translation calls after the temporary hard-coded-label change; commit `427c7bc Restore Area translations and hierarchy` supersedes the label change.
 - [x] Enforced Sub Area ownership on both layers: the form filters Areas by selected City using `data-city-id`, and the controller requires the selected Area's `parent_id` to match that City.
-- [x] Removed PHP nested loops from Area Blade views (`insert.blade.php`) and removed unnecessary `$areas` query from `AreaController@index`.
-- [x] Implemented City $\rightarrow$ Area and Area $\rightarrow$ Sub-Area dependent dropdowns via AJAX (`getAreaByAjax` and `getSubAreaByAjax`) in `AreaController` and registered routes.
-- [x] Updated existing `area.js` to reuse Chosen select (`chosen-select` / `chosen`) with `chosen:updated` event triggers when dropdown options auto-load on City/Area selection.
-- [x] Restricted Area DataTable buttons in `area.js` to ONLY Column Visibility (`colvis`), removing Print, Copy, PDF, Excel, and CSV export buttons per owner instruction.
+- [x] Removed PHP nested loops from Area Blade views (`insert.blade.php`) for both City and Area dropdowns, and removed unnecessary `$cities` and `$areas` queries from `AreaController@index`.
+- [x] Implemented City dropdown via AJAX (`getCitiesByAjax`) in `AreaController` and registered `/area/getCitiesByAjax` & legacy routes.
+- [x] Preserved existing working Area and Sub-Area JS logic in `area.js` completely intact without refactoring, adding `loadCitiesByAjax()` to populate City dropdown and trigger `chosen:updated`.
+- [x] Created reusable `activity_log()` helper in `app/Helpers/helpers.php` (no business service layer created, as per convention).
+- [x] Integrated `activity_log()` in login (`AuthenticatedSessionController@store`), logout (`AuthenticatedSessionController@destroy`), and Area CRUD operations (`AreaController` `insert`, `update`, `delete`), ensuring sensitive data is never logged.
 
 ## 16. Pending checklist
 
@@ -447,6 +448,19 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - Do not replace Area Blade translation calls with hard-coded labels. Translation keys are intentional owner work even if a missing locale temporarily displays the key itself.
 - Legacy files are generated/obfuscated in places. Use them as UI/schema behavior references, not as code to copy blindly.
 
+### Activity Log Helper Documentation
+
+- **Helper Location:** `app/Helpers/helpers.php` (function `activity_log()`).
+- **Signature:** `activity_log($activity, $targetType = null, $targetId = null, $againstUserId = null)`
+- **Functionality:** Creates a record in the `activity_logs` table storing `action_by_id` (`auth()->id()`), `against_user_id`, `activity` (max 255 chars), `target_type`, `target_id`, `ip_address`, and `user_agent`. Sensitive data (passwords, tokens, credentials) MUST NOT be included.
+- **Active Usage:**
+  - Login (`AuthenticatedSessionController@store`): `activity_log('User logged in', 'User', auth()->id())`
+  - Logout (`AuthenticatedSessionController@destroy`): `activity_log('User logged out', 'User', auth()->id())`
+  - Area Create (`AreaController@insert`): `activity_log('Created location (' . ucfirst($type) . '): ' . $newArea->name, 'Area', $newArea->id)`
+  - Area Update (`AreaController@update`): `activity_log('Updated location (' . ucfirst($area->type) . '): ' . $area->name, 'Area', $area->id)`
+  - Area Delete (`AreaController@delete`): `activity_log('Deleted location (' . ucfirst($area->type) . '): ' . $area->name, 'Area', $area->id)`
+- **Future Module Instructions:** All future AI coding agents must call `activity_log()` whenever a meaningful state change occurs in any controller/module (e.g. user create/update, package change, payment creation, RADIUS policy assignment, etc.) without creating separate service classes.
+
 ---
 
-**Handover state:** Background helper correction, relationship restoration, GitHub synchronization, the reusable Theme 1 partials, dummy dashboard and one combined Super Admin/Admin-side/Client layout are finished and verified. Dashboard permission data comes through `User → Role → Permission`, and authenticated Theme 1 Blades resolve settings directly with `setting()`. Area management module is complete: full hierarchy CRUD, permissions, AJAX DataTable (with Column Visibility button only), user counts, and AJAX dependent dropdowns (City $\rightarrow$ Area $\rightarrow$ Sub-Area using Chosen select without PHP nested loops) are implemented, updated in existing `area.js`, verified, and committed. Continue with the next owner-selected legacy module from this exact point; do not restart schema or layout work.
+**Handover state:** Area management module is complete. City, Area, and Sub-Area dropdowns are 100% AJAX and Chosen-select based without PHP `@foreach` loops. Existing working Area and Sub-Area JS logic in `area.js` was preserved without refactoring. Reusable `activity_log()` helper was created in `app/Helpers/helpers.php` and integrated into Login, Logout, and Area CRUD operations. All changes are tested and verified. Continue with the next owner-selected module from this exact point.
