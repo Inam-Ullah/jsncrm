@@ -14,9 +14,19 @@ $(document).ready(function () {
 
         $citySelect.each(function () {
             var $elem = $(this);
-            if ($elem.find('option[value!=""]').length > 0) return;
-
             var selectedVal = $elem.data('selected');
+
+            if ($elem.find('option[value!=""]').length > 0) {
+                if (selectedVal && !$elem.val()) {
+                    $elem.val(selectedVal);
+                }
+                if ($.fn.chosen) {
+                    $elem.trigger('chosen:updated');
+                    $elem.next('.chosen-container').css({ width: '100%' });
+                }
+                return;
+            }
+
             var url = (typeof baseurl !== 'undefined' ? baseurl : '/') + 'area/getCitiesByAjax';
 
             $.ajax({
@@ -36,12 +46,14 @@ $(document).ready(function () {
                     }
                     if ($.fn.chosen) {
                         $elem.trigger('chosen:updated');
+                        $elem.next('.chosen-container').css({ width: '100%' });
                     }
                 },
                 error: function () {
                     $('div#loading').delay(100).fadeOut('slow');
                     if ($.fn.chosen) {
                         $elem.trigger('chosen:updated');
+                        $elem.next('.chosen-container').css({ width: '100%' });
                     }
                 }
             });
@@ -84,12 +96,18 @@ $(document).ready(function () {
     syncAreaTypeFields();
 
     $(document).on('shown.bs.modal', '.modal', function () {
-        var $modalCities = $(this).find('select.ajax-city, select.load_city, select.area_city, select.isp_city');
+        var $modalContainer = $(this);
+        var $modalCities = $modalContainer.find('select.ajax-city, select.load_city, select.area_city, select.isp_city');
+
         if ($modalCities.length) {
             loadCitiesByAjax($modalCities);
         }
+
         if ($.fn.chosen) {
-            $(this).find('select.chosen-select, select.chosen').chosen({ width: '100%' }).trigger('chosen:updated');
+            $modalContainer.find('select.chosen-select, select.chosen').each(function () {
+                $(this).chosen({ width: '100%' }).trigger('chosen:updated');
+                $(this).next('.chosen-container').css({ width: '100%' });
+            });
         }
     });
 
