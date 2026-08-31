@@ -10,20 +10,21 @@
                     <div class="x_title">
                         <h2><i class="fas fa-address-card"></i> {{ __('isp') }}</h2>
 
-                        @if(in_array($author->role_id, [1, 2]))
-                            <h2 class="right">
-                                <button type="button" class="btn btn-zalpro text-white add-isp-modal"
-                                    data-toggle="modal" data-target=".add_isp_modal">
-                                    <i class="fas fa-user-plus"></i> {{ __('isp_add') }}
-                                </button>
-                            </h2>
+                        @if(in_array($author->role_id, [1]))
+                        <h2 class="right">
+                            <button type="button" class="btn btn-zalpro text-white add-isp-modal" data-toggle="modal"
+                                data-target=".add_isp_modal">
+                                <i class="fas fa-user-plus"></i> {{ __('isp_add') }}
+                            </button>
+                        </h2>
                         @endif
 
                         <div class="clearfix"></div>
                     </div>
 
                     <div class="x_content">
-                        <table class="dtAllIsp table table-striped responsive-utilities jambo_table bulk_action" style="table-layout: auto !important;">
+                        <table class="dtAllIsp table table-striped responsive-utilities jambo_table bulk_action"
+                            style="table-layout: auto !important;">
                             <thead>
                                 <tr class="headings">
                                     <th class="column-title">#</th>
@@ -37,36 +38,40 @@
                             </thead>
                             <tbody>
                                 @foreach($isps as $index => $row)
-                                    <tr class="even pointer">
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $row->company_name }}</td>
-                                        <td>{{ $row->poc_name }}</td>
-                                        <td>{{ $row->mobile }}</td>
-                                        <td>{{ $row->city ? $row->city->name : 'N/A' }}</td>
-                                        <td><span class="label label-info">{{ $row->users->count() }}</span></td>
-                                        <td class="action-link">
-                                            <a href="{{ route('isp.edit', $row->id) }}" class="mr-5">
-                                                <span data-toggle="tooltip" title="{{ __('edit') }}" class="label label-warning">
-                                                    <i class="fas fa-edit"></i>
-                                                </span>
-                                            </a>
-                                            @if($row->users->count() == 0 && $row->invoices->count() == 0)
-                                                <a class="delete-disable isp-delete" href="{{ route('isp.delete', $row->id) }}">
-                                                    <span data-toggle="tooltip" title="{{ __('delete') }}" class="label label-danger">
-                                                        <i class="fas fa-times-circle"></i>
-                                                    </span>
-                                                </a>
-                                            @endif
-                                        </td>
-                                    </tr>
+                                <tr class="even pointer">
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $row->company_name }}</td>
+                                    <td>{{ $row->poc_name }}</td>
+                                    <td>{{ $row->mobile }}</td>
+                                    <td>{{ $row->city ? $row->city->name : 'N/A' }}</td>
+                                    <td>
+                                        <span class="label label-info">{{ $row->users->count() }}</span>
+                                    </td>
+                                    <td class="action-link">
+                                        <a href="{{ route('isp.edit', $row->id) }}" class="mr-5">
+                                            <span data-toggle="tooltip" title="{{ __('edit') }}"
+                                                class="label label-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </span>
+                                        </a>
+                                        @if($row->users->count() == 0 && $row->invoices->count() == 0)
+                                        <a class="delete-disable isp-delete" href="{{ route('isp.delete', $row->id) }}">
+                                            <span data-toggle="tooltip" title="{{ __('delete') }}"
+                                                class="label label-danger">
+                                                <i class="fas fa-times-circle"></i>
+                                            </span>
+                                        </a>
+                                        @endif
+                                    </td>
+                                </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                @if(in_array($author->role_id, [1, 2]))
-                    @include('theme1.isp.insert')
+                @if(in_array($author->role_id, [1]))
+                @include('theme1.isp.insert')
                 @endif
             </div>
         </div>
@@ -102,7 +107,39 @@
             });
         }
 
+        function loadCitiesByAjax($targetCitySelect) {
+            var $citySelect = $targetCitySelect || $('select.isp_city, select[name="city_id"]');
+            if (!$citySelect.length) return;
+            if ($citySelect.find('option[value!=""]').length > 0) return;
+
+            var url = (typeof baseurl !== 'undefined' ? baseurl : '/') + 'area/getCitiesByAjax';
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                beforeSend: function () {
+                    $('div#loading').delay(100).fadeIn();
+                },
+                success: function (data) {
+                    $('div#loading').delay(100).fadeOut('slow');
+                    if (data && data != 0) {
+                        $citySelect.empty().append(data);
+                    }
+                    if ($.fn.chosen) {
+                        $citySelect.trigger('chosen:updated');
+                    }
+                },
+                error: function () {
+                    $('div#loading').delay(100).fadeOut('slow');
+                    if ($.fn.chosen) {
+                        $citySelect.trigger('chosen:updated');
+                    }
+                }
+            });
+        }
+
         $('.add_isp_modal').on('shown.bs.modal', function () {
+            loadCitiesByAjax($(this).find('select.isp_city, select[name="city_id"]'));
             if ($.fn.chosen) {
                 $(this).find('select.chosen-select, select.chosen').chosen({ width: '100%' }).trigger('chosen:updated');
             }

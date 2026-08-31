@@ -52,13 +52,8 @@
                             <div class="item form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">{{ __('city') }} <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select class="form-control chosen-select" name="city_id" required>
+                                    <select class="form-control isp_city chosen-select" name="city_id" data-selected="{{ old('city_id', $isp->city_id) }}" required>
                                         <option value="">{{ __('select_city') }}</option>
-                                        @foreach($cities as $city)
-                                            <option value="{{ $city->id }}" @selected(old('city_id', $isp->city_id) == $city->id)>
-                                                {{ $city->name }}
-                                            </option>
-                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -77,4 +72,47 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function () {
+        function loadCitiesByAjax($targetCitySelect, selectedValue) {
+            var $citySelect = $targetCitySelect || $('select.isp_city, select[name="city_id"]');
+            if (!$citySelect.length) return;
+
+            var url = (typeof baseurl !== 'undefined' ? baseurl : '/') + 'area/getCitiesByAjax';
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                beforeSend: function () {
+                    $('div#loading').delay(100).fadeIn();
+                },
+                success: function (data) {
+                    $('div#loading').delay(100).fadeOut('slow');
+                    if (data && data != 0) {
+                        $citySelect.empty().append(data);
+                        if (selectedValue) {
+                            $citySelect.val(selectedValue);
+                        }
+                    }
+                    if ($.fn.chosen) {
+                        $citySelect.chosen({ width: '100%' }).trigger('chosen:updated');
+                    }
+                },
+                error: function () {
+                    $('div#loading').delay(100).fadeOut('slow');
+                    if ($.fn.chosen) {
+                        $citySelect.chosen({ width: '100%' }).trigger('chosen:updated');
+                    }
+                }
+            });
+        }
+
+        var $editCitySelect = $('select.isp_city');
+        var selectedCity = $editCitySelect.data('selected');
+        loadCitiesByAjax($editCitySelect, selectedCity);
+    });
+</script>
 @endsection

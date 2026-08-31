@@ -27,7 +27,6 @@ class IspController extends Controller
         return view(theme('isp.index'), [
             'author' => $author,
             'isps'   => $isps,
-            'cities' => $cities,
         ]);
     }
 
@@ -85,12 +84,9 @@ class IspController extends Controller
             return redirect()->route('isp')->withErrors(['error' => 'You are not authorized to edit this ISP.']);
         }
 
-        $cities = Area::where('type', 'city')->orderBy('name')->get();
-
         return view(theme('isp.edit'), [
             'author' => $author,
             'isp'    => $isp,
-            'cities' => $cities,
         ]);
     }
 

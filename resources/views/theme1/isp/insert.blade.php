@@ -35,13 +35,8 @@
                     <div class="item form-group">
                         <label class="control-label col-md-4 col-sm-4 col-xs-12">{{ __('city') }} <span class="required">*</span></label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select class="form-control chosen-select" name="city_id" required>
+                            <select class="form-control isp_city chosen-select" name="city_id" required>
                                 <option value="">{{ __('select_city') }}</option>
-                                @foreach($cities as $city)
-                                    <option value="{{ $city->id }}" @selected(old('city_id') == $city->id)>
-                                        {{ $city->name }}
-                                    </option>
-                                @endforeach
                             </select>
                         </div>
                     </div>
