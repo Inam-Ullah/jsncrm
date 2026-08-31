@@ -391,6 +391,15 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [x] Created reusable `activity_log()` helper in `app/Helpers/helpers.php` (no business service layer created, as per convention).
 - [x] Integrated `activity_log()` in login (`AuthenticatedSessionController@store`), logout (`AuthenticatedSessionController@destroy`), and Area CRUD operations (`AreaController` `insert`, `update`, `delete`), ensuring sensitive data is never logged.
 - [x] Replaced `findOrFail()` with `find()` and custom error handling in `AreaController` (`edit`, `update`, `delete`, `getAreaByAjax`, `getSubAreaByAjax`), returning user-friendly redirect messages (`'Location not found.'`) or JSON `0`/404 error responses for invalid record IDs instead of generic production 404 pages.
+- [x] Completed ISP module end-to-end preserving owner's intended `IspController@index` logic:
+  - Preserved `isps.user_id` (Super Admin/Admin owner) & `users.isp_id` (assigned user ISP) hierarchy.
+  - Implemented `IspController` methods (`index`, `insert`, `edit`, `update`, `delete`) with Role 1 & 2 authorization and safe `find()` error handling.
+  - Defined Eloquent relationships: `Isp::user()`, `Isp::city()`, `Isp::users()`, `Isp::invoices()`, `User::ownedIsps()`, `User::isp()`.
+  - Registered named routes: `route('isp')`, `route('isp.insert')`, `route('isp.edit')`, `route('isp.update')`, `route('isp.delete')`.
+  - Created Theme 1 Blade views (`resources/views/theme1/isp/index.blade.php`, `insert.blade.php`, `edit.blade.php`).
+  - Created external JavaScript `public/theme1/assets/themes/legacy/js/isp.js` with DataTable (Column Visibility button only) & `$.confirm` modal delete handler.
+  - Integrated `activity_log()` for ISP creation, update, and deletion.
+  - Verified dependency checks preventing deletion of ISPs with assigned users or invoices.
 
 ## 16. Pending checklist
 
@@ -460,8 +469,11 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
   - Area Create (`AreaController@insert`): `activity_log('Created location (' . ucfirst($type) . '): ' . $newArea->name, 'Area', $newArea->id)`
   - Area Update (`AreaController@update`): `activity_log('Updated location (' . ucfirst($area->type) . '): ' . $area->name, 'Area', $area->id)`
   - Area Delete (`AreaController@delete`): `activity_log('Deleted location (' . ucfirst($area->type) . '): ' . $area->name, 'Area', $area->id)`
+  - ISP Create (`IspController@insert`): `activity_log('Created ISP: ' . $isp->company_name, 'Isp', $isp->id)`
+  - ISP Update (`IspController@update`): `activity_log('Updated ISP: ' . $isp->company_name, 'Isp', $isp->id)`
+  - ISP Delete (`IspController@delete`): `activity_log('Deleted ISP: ' . $isp->company_name, 'Isp', $isp->id)`
 - **Future Module Instructions:** All future AI coding agents must call `activity_log()` whenever a meaningful state change occurs in any controller/module (e.g. user create/update, package change, payment creation, RADIUS policy assignment, etc.) without creating separate service classes.
 
 ---
 
-**Handover state:** Area management module is complete. City, Area, and Sub-Area dropdowns are 100% AJAX and Chosen-select based without PHP `@foreach` loops. Existing working Area and Sub-Area JS logic in `area.js` was preserved without refactoring. Reusable `activity_log()` helper was created in `app/Helpers/helpers.php` and integrated into Login, Logout, and Area CRUD operations. All changes are tested and verified. Continue with the next owner-selected module from this exact point.
+**Handover state:** Area management and ISP management modules are complete. Owner's manual changes and intended `IspController@index` logic were preserved and verified. ISP hierarchy (`isps.user_id` owner Admin/Super Admin vs `users.isp_id` assigned user) is enforced. Full CRUD operations for ISP (`index`, `insert`, `edit`, `update`, `delete`), routes, Theme 1 Blade views (`resources/views/theme1/isp/`), external JavaScript (`public/theme1/assets/themes/legacy/js/isp.js`), DataTables (Column Visibility button only), dependency checks, and `activity_log()` logging are implemented, verified, and committed. Continue with the next owner-selected module from this exact point.

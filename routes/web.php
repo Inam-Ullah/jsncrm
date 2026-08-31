@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\{
     HomeController,     GlobalController,   AreaController,
-    ProfileController
+    ProfileController,  IspController,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +34,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/getAreaByAjax', [AreaController::class, 'getAreaByAjax'])->name('area.getAreaByAjax');
         Route::post('/getSubAreaByAjax', [AreaController::class, 'getSubAreaByAjax'])->name('area.getSubAreaByAjax');
         Route::post('/update', [AreaController::class, 'update'])->name('area.update');
+    });
+
+    Route::prefix('isp')->group(function (){
+        Route::get('/', [IspController::class, 'index'])->name('isp');
+        Route::post('/insert', [IspController::class, 'insert'])->name('isp.insert');
+        Route::get('/edit/{id}', [IspController::class, 'edit'])->name('isp.edit');
+        Route::post('/update', [IspController::class, 'update'])->name('isp.update');
+        Route::get('/delete/{id}', [IspController::class, 'delete'])->name('isp.delete');
     });
 
     Route::post('/admin_portal/user/user/getCitiesByAjax', [AreaController::class, 'getCitiesByAjax']);

@@ -11,6 +11,11 @@ class Isp extends Model
 
     protected $guarded = [];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function city()
     {
         return $this->belongsTo(Area::class, 'city_id');

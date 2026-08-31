@@ -36,6 +36,11 @@ class User extends Authenticatable
         return $this->belongsTo(Isp::class);
     }
 
+    public function ownedIsps()
+    {
+        return $this->hasMany(Isp::class, 'user_id');
+    }
+
     public function admin()
     {
         return $this->belongsTo(self::class, 'admin_id');

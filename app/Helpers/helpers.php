@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\ActivityLog;
+use App\Models\Isp;
 use App\Models\Setting;
+
 if (!function_exists('setting')) {
     function setting()
     {
@@ -172,7 +175,7 @@ if (!function_exists('theme')) {
 if (!function_exists('activity_log')) {
     function activity_log($activity, $targetType = null, $targetId = null, $againstUserId = null)
     {
-        return \App\Models\ActivityLog::create([
+        return ActivityLog::create([
             'action_by_id'    => auth()->id(),
             'against_user_id' => $againstUserId,
             'activity'        => substr($activity, 0, 255),
@@ -183,3 +186,15 @@ if (!function_exists('activity_log')) {
         ]);
     }
 }
+
+// if (!function_exists('isp')) {
+//     function isp()
+//     {
+//         if (in_array(auth()->user()->role_id, [1, 2])) {
+//             $isp = auth()->user()->isp;
+//         } else {
+//             $isp = Isp::where('user_id', auth()->user()->admin->id)->first();
+//         }
+//         return $isp;
+//     }
+// }
