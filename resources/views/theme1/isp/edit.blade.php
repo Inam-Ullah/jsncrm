@@ -62,7 +62,7 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">{{ __('city') }} <span
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select class="form-control isp_city chosen-select" name="city_id"
+                                    <select class="form-control ajax-city chosen-select" name="city_id"
                                         data-selected="{{ old('city_id', $isp->city_id) }}" required>
                                         <option value="">{{ __('select_city') }}</option>
                                     </select>

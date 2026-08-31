@@ -473,6 +473,13 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
   - ISP Delete (`IspController@delete`): `activity_log('Deleted ISP: ' . $isp->company_name, 'Isp', $isp->id)`
 - **Future Module Instructions:** All future AI coding agents must call `activity_log()` whenever a meaningful state change occurs in any controller/module (e.g. user create/update, package change, payment creation, RADIUS policy assignment, etc.) without creating separate service classes.
 
+### Reusable AJAX City Dropdown Convention (.ajax-city)
+
+- **Class Name:** `.ajax-city` (or `.load_city`)
+- **Location:** Managed globally in `public/theme1/assets/themes/legacy/js/area.js`.
+- **Usage for Future Modules:** Any Blade view or modal can simply add `class="form-control ajax-city chosen-select"` to a City `<select>` element.
+- **Pre-Selected Value Support:** Pass `data-selected="{{ $record->city_id }}"` on the `<select>` element for Edit pages; `area.js` automatically populates the options via AJAX (`getCitiesByAjax`) and sets the selected value.
+
 ---
 
-**Handover state:** Area management and ISP management modules are complete. Owner's manual changes and intended `IspController@index` logic were preserved and verified. ISP hierarchy (`isps.user_id` owner Admin/Super Admin vs `users.isp_id` assigned user) is enforced. Full CRUD operations for ISP (`index`, `insert`, `edit`, `update`, `delete`), routes, Theme 1 Blade views (`resources/views/theme1/isp/`), external JavaScript (`public/theme1/assets/themes/legacy/js/isp.js`), DataTables (Column Visibility button only), dependency checks, and `activity_log()` logging are implemented, verified, and committed. Continue with the next owner-selected module from this exact point.
+**Handover state:** Area management and ISP management modules are complete. Universal `.ajax-city` class was implemented in `area.js` for seamless City AJAX loading across present and future modules. ISP hierarchy (`isps.user_id` owner Admin/Super Admin vs `users.isp_id` assigned user) is enforced. Full CRUD operations for ISP (`index`, `insert`, `edit`, `update`, `delete`), routes, Theme 1 Blade views (`resources/views/theme1/isp/`), DataTables (Column Visibility button only), dependency checks, and `activity_log()` logging are implemented, verified, and committed. Continue with the next owner-selected module from this exact point.
