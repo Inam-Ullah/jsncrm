@@ -396,8 +396,7 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
   - Implemented `IspController` methods (`index`, `insert`, `edit`, `update`, `delete`) with Role 1 & 2 authorization and safe `find()` error handling.
   - Defined Eloquent relationships: `Isp::user()`, `Isp::city()`, `Isp::users()`, `Isp::invoices()`, `User::ownedIsps()`, `User::isp()`.
   - Registered named routes: `route('isp')`, `route('isp.insert')`, `route('isp.edit')`, `route('isp.update')`, `route('isp.delete')`.
-  - Created Theme 1 Blade views (`resources/views/theme1/isp/index.blade.php`, `insert.blade.php`, `edit.blade.php`), removing PHP `@foreach` loop for cities and loading City dropdown dynamically via AJAX (`getCitiesByAjax`).
-  - Embedded DataTable (Column Visibility button only), Chosen select, and `$.confirm` delete handler scripts directly inside `resources/views/theme1/isp/index.blade.php` under `@section('scripts')` per owner request.
+  - Created Theme 1 Blade views (`resources/views/theme1/isp/index.blade.php`, `insert.blade.php`, `edit.blade.php`), reusing `public/theme1/assets/themes/legacy/js/area.js` for dynamic AJAX City dropdown loading (`getCitiesByAjax`) and Chosen select updates.
   - Integrated `activity_log()` for ISP creation, update, and deletion.
   - Verified dependency checks preventing deletion of ISPs with assigned users or invoices.
 

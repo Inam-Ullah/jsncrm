@@ -95,83 +95,14 @@
                 buttons: [
                     {
                         extend: 'colvis',
-                        text: '<i class="fas fa-eye"></i> Column Visibility',
+                        text: '<i class="fas fa-eye"></i> View',
                         className: 'btn-primary'
                     }
                 ],
-                drawCallback: function () {
-                    if ($.fn.tooltip) {
-                        $('[data-toggle="tooltip"]').tooltip();
-                    }
-                }
+
             });
         }
 
-        function loadCitiesByAjax($targetCitySelect) {
-            var $citySelect = $targetCitySelect || $('select.isp_city, select[name="city_id"]');
-            if (!$citySelect.length) return;
-            if ($citySelect.find('option[value!=""]').length > 0) return;
-
-            var url = (typeof baseurl !== 'undefined' ? baseurl : '/') + 'area/getCitiesByAjax';
-            $.ajax({
-                type: 'POST',
-                url: url,
-                dataType: 'json',
-                beforeSend: function () {
-                    $('div#loading').delay(100).fadeIn();
-                },
-                success: function (data) {
-                    $('div#loading').delay(100).fadeOut('slow');
-                    if (data && data != 0) {
-                        $citySelect.empty().append(data);
-                    }
-                    if ($.fn.chosen) {
-                        $citySelect.trigger('chosen:updated');
-                    }
-                },
-                error: function () {
-                    $('div#loading').delay(100).fadeOut('slow');
-                    if ($.fn.chosen) {
-                        $citySelect.trigger('chosen:updated');
-                    }
-                }
-            });
-        }
-
-        $('.add_isp_modal').on('shown.bs.modal', function () {
-            loadCitiesByAjax($(this).find('select.isp_city, select[name="city_id"]'));
-            if ($.fn.chosen) {
-                $(this).find('select.chosen-select, select.chosen').chosen({ width: '100%' }).trigger('chosen:updated');
-            }
-        });
-
-        $(document).on('click', '.isp-delete', function (e) {
-            e.preventDefault();
-            var deleteUrl = $(this).attr('href');
-
-            if (typeof $.confirm === 'function') {
-                $.confirm({
-                    title: 'Delete Confirmation',
-                    content: 'Are you sure you want to delete this ISP record?',
-                    type: 'red',
-                    buttons: {
-                        confirm: {
-                            text: 'Yes, Delete',
-                            btnClass: 'btn-danger',
-                            action: function () {
-                                window.location.href = deleteUrl;
-                            }
-                        },
-                        cancel: {
-                            text: 'Cancel',
-                            btnClass: 'btn-default'
-                        }
-                    }
-                });
-            } else if (confirm('Are you sure you want to delete this ISP record?')) {
-                window.location.href = deleteUrl;
-            }
-        });
     });
 </script>
 @endsection

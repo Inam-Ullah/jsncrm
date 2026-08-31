@@ -9,10 +9,12 @@ $(document).ready(function () {
     initChosen('select.chosen-select, select.chosen');
 
     function loadCitiesByAjax($targetCitySelect) {
-        var $citySelect = $targetCitySelect || $('select.area_city, select.city, .filter_modal select.filterCity');
+        var $citySelect = $targetCitySelect || $('select.area_city, select.isp_city, select.city, .filter_modal select.filterCity');
         if (!$citySelect.length) return;
 
         if ($citySelect.find('option[value!=""]').length > 0) return;
+
+        var selectedVal = $citySelect.data('selected');
 
         var url = (typeof baseurl !== 'undefined' ? baseurl : '/') + 'area/getCitiesByAjax';
         $.ajax({
@@ -26,6 +28,9 @@ $(document).ready(function () {
                 $('div#loading').delay(100).fadeOut('slow');
                 if (data && data != 0) {
                     $citySelect.empty().append(data);
+                    if (selectedVal) {
+                        $citySelect.val(selectedVal);
+                    }
                 }
                 if ($.fn.chosen) {
                     $citySelect.trigger('chosen:updated');
@@ -75,12 +80,16 @@ $(document).ready(function () {
     $(document).on('change', 'select.area_areatype', syncAreaTypeFields);
     syncAreaTypeFields();
 
-    $('.add_areas_modal').on('shown.bs.modal', function () {
-        loadCitiesByAjax($(this).find('select.area_city'));
+    $('.add_areas_modal, .add_isp_modal').on('shown.bs.modal', function () {
+        loadCitiesByAjax($(this).find('select.area_city, select.isp_city'));
         if ($.fn.chosen) {
-            $(this).find('select.chosen-select, select.chosen, select.area_city, select.area_area').chosen({ width: '100%' }).trigger('chosen:updated');
+            $(this).find('select.chosen-select, select.chosen, select.area_city, select.isp_city, select.area_area').chosen({ width: '100%' }).trigger('chosen:updated');
         }
     });
+
+    if ($('select.isp_city').length) {
+        loadCitiesByAjax($('select.isp_city'));
+    }
 
     // On City select -> load Areas via AJAX
     $(document).on('change', 'select.area_city, select.city, .filter_modal select.filterCity', function () {
