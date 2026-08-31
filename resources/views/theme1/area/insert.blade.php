@@ -34,7 +34,7 @@
                             {{ __('city') }} <span class="required">*</span>
                         </label>
                         <div class="col-md-7 col-sm-7 col-xs-12">
-                            <select class="form-control area_city" name="city">
+                            <select class="form-control area_city chosen-select" name="city">
                                 <option value="">{{ __('select_city') }}</option>
                                 @foreach($cities as $city)
                                     <option value="{{ $city->id }}" @selected(old('city') == $city->id)>
@@ -50,14 +50,8 @@
                             {{ __('area') }} <span class="required">*</span>
                         </label>
                         <div class="col-md-7 col-sm-7 col-xs-12">
-                            <select class="form-control area_area" name="area">
+                            <select class="form-control area_area chosen-select" name="area">
                                 <option value="">{{ __('select_area') }}</option>
-                                @foreach($areas as $area)
-                                    <option value="{{ $area->id }}" data-city-id="{{ $area->parent_id }}"
-                                        @selected(old('area') == $area->id)>
-                                        {{ $area->name }}
-                                    </option>
-                                @endforeach
                             </select>
                         </div>
                     </div>

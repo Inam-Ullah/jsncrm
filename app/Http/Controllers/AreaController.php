@@ -18,12 +18,10 @@ class AreaController extends Controller
         }
 
         $cities = Area::where('type', 'city')->orderBy('name')->get();
-        $areas = Area::where('type', 'area')->orderBy('name')->get();
 
         return view(theme('area.index'), [
             'author' => $author,
             'cities' => $cities,
-            'areas' => $areas,
         ]);
     }
 
@@ -241,6 +239,46 @@ class AreaController extends Controller
             'recordsFiltered' => $total,
             'data' => $rows,
         ];
+    }
+
+    public function getAreaByAjax(Request $request)
+    {
+        $cityId = $request->input('city') ?? $request->input('city_id');
+
+        $html = '<option value="">' . __('select_area') . '</option>';
+
+        if ($cityId) {
+            $areas = Area::where('type', 'area')
+                ->where('parent_id', $cityId)
+                ->orderBy('name')
+                ->get();
+
+            foreach ($areas as $area) {
+                $html .= '<option value="' . $area->id . '">' . e($area->name) . '</option>';
+            }
+        }
+
+        return response()->json($html);
+    }
+
+    public function getSubAreaByAjax(Request $request)
+    {
+        $areaId = $request->input('area') ?? $request->input('area_id');
+
+        $html = '<option value="">' . __('select_subarea') . '</option>';
+
+        if ($areaId) {
+            $subareas = Area::where('type', 'sub_area')
+                ->where('parent_id', $areaId)
+                ->orderBy('name')
+                ->get();
+
+            foreach ($subareas as $subarea) {
+                $html .= '<option value="' . $subarea->id . '">' . e($subarea->name) . '</option>';
+            }
+        }
+
+        return response()->json($html);
     }
 
     private function areaRow($area, $users, $level, $author)

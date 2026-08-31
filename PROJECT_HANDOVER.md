@@ -12,7 +12,7 @@
 - Web application currently tested at `http://192.168.20.55:8080`
 - The Laravel directory is a Git repository on branch `main` and tracks `origin/main`.
 - GitHub remote: `https://github.com/Inam-Ullah/jsncrm.git`.
-- Latest implementation commit at this handover stage: `54cc199` (`Use GET route for logout`).
+- Latest implementation commit at this handover stage: `8c849e1` (`Implement Area AJAX dependent dropdowns with Chosen select and restrict DataTables export buttons`, committed locally; push pending authentication).
 - Database is configured and all currently present migrations have run in batch 1.
 - Seeded data currently includes 12 roles, 2 areas, 7 type rows, 2 users and 2 settings rows.
 
@@ -385,6 +385,10 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 - [x] Committed and pushed Area implementation as `756e6a5 Build Area management module`.
 - [x] Restored the owner's `__()` translation calls after the temporary hard-coded-label change; commit `427c7bc Restore Area translations and hierarchy` supersedes the label change.
 - [x] Enforced Sub Area ownership on both layers: the form filters Areas by selected City using `data-city-id`, and the controller requires the selected Area's `parent_id` to match that City.
+- [x] Removed PHP nested loops from Area Blade views (`insert.blade.php`) and removed unnecessary `$areas` query from `AreaController@index`.
+- [x] Implemented City $\rightarrow$ Area and Area $\rightarrow$ Sub-Area dependent dropdowns via AJAX (`getAreaByAjax` and `getSubAreaByAjax`) in `AreaController` and registered routes.
+- [x] Updated existing `area.js` to reuse Chosen select (`chosen-select` / `chosen`) with `chosen:updated` event triggers when dropdown options auto-load on City/Area selection.
+- [x] Restricted Area DataTable buttons in `area.js` to ONLY Column Visibility (`colvis`), removing Print, Copy, PDF, Excel, and CSV export buttons per owner instruction.
 
 ## 16. Pending checklist
 
@@ -445,4 +449,4 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 
 ---
 
-**Handover state:** Background helper correction, relationship restoration, GitHub synchronization, the reusable Theme 1 partials, dummy dashboard and one combined Super Admin/Admin-side/Client layout are finished and verified. Dashboard permission data comes through `User → Role → Permission`, and authenticated Theme 1 Blades resolve settings directly with `setting()`. Area management is now the first completed legacy-to-Laravel module: full hierarchy CRUD, permissions, AJAX DataTable, user counts and responsive Theme 1 views are implemented and pushed. The database was not migrated or reseeded for this module. Continue with the next owner-selected legacy module from this exact point; do not restart schema or layout work.
+**Handover state:** Background helper correction, relationship restoration, GitHub synchronization, the reusable Theme 1 partials, dummy dashboard and one combined Super Admin/Admin-side/Client layout are finished and verified. Dashboard permission data comes through `User → Role → Permission`, and authenticated Theme 1 Blades resolve settings directly with `setting()`. Area management module is complete: full hierarchy CRUD, permissions, AJAX DataTable (with Column Visibility button only), user counts, and AJAX dependent dropdowns (City $\rightarrow$ Area $\rightarrow$ Sub-Area using Chosen select without PHP nested loops) are implemented, updated in existing `area.js`, verified, and committed. Continue with the next owner-selected legacy module from this exact point; do not restart schema or layout work.
