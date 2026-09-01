@@ -10,21 +10,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    private function resolveRole($roleName)
-    {
-        $clean = trim(str_replace(['-', '_'], ' ', $roleName));
-
-        if (is_numeric($clean)) {
-            $role = Role::find($clean);
-            if ($role) return $role;
-        }
-
-        $role = Role::where('name', 'LIKE', $clean)->first();
-        if ($role) return $role;
-
-        return Role::where('name', 'LIKE', $clean . '%')->first();
-    }
-
     public function index($roleName)
     {
         $author = auth()->user();
@@ -34,7 +19,14 @@ class UserController extends Controller
             return redirect()->back()->withErrors(['error' => $msg]);
         }
 
-        $role = $this->resolveRole($roleName);
+        $clean = trim(str_replace(['-', '_'], ' ', $roleName));
+        $role = Role::where('name', 'LIKE', $clean)
+            ->orWhere('name', 'LIKE', $clean . '%')
+            ->first();
+
+        if (!$role && is_numeric($clean)) {
+            $role = Role::find($clean);
+        }
 
         if (!$role) {
             return redirect()->route('home')->withErrors(['error' => 'Invalid role requested.']);
@@ -66,7 +58,14 @@ class UserController extends Controller
             return redirect()->back()->withErrors(['error' => $msg]);
         }
 
-        $role = $this->resolveRole($roleName);
+        $clean = trim(str_replace(['-', '_'], ' ', $roleName));
+        $role = Role::where('name', 'LIKE', $clean)
+            ->orWhere('name', 'LIKE', $clean . '%')
+            ->first();
+
+        if (!$role && is_numeric($clean)) {
+            $role = Role::find($clean);
+        }
 
         if (!$role) {
             return redirect()->route('home')->withErrors(['error' => 'Invalid role requested.']);
