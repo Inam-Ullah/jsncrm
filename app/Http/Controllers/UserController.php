@@ -15,37 +15,64 @@ class UserController extends Controller
         $author = auth()->user();
         $msg = 'You are not eligible to access this module.';
 
-        if (!in_array($author->role_id, [1, 2])) {
-            return redirect()->back()->withErrors(['error' => $msg]);
+        $roles = $isps = [];
+        $addPermission = false;
+        $resellerRole = [2, 3, 4, 5, 6];
+
+        switch ($roleName) {
+            case 'admin':
+                if ($author->role_id != 1) {
+                    return redirect()->back()->withErrors(['error' => $msg]);
+                }
+
+                $addPermission = true;
+                $roles = Role::whereNotIn('id', [1, 2, 3, 4, 5, 6, 7])->get();
+                $isps  = Isp::all();
+
+                break;
+            case 'franchise':
+                if ($author->role_id != 2 && !permission('franchise_module')) {
+                    return redirect()->back()->withErrors(['error' => $msg]);
+                }
+                $addPermission = $author->role_id == 2 || permission('franchise_add_new');
+                break;
+            case 'dealer':
+                if (!in_array($author->role_id, [2, 3]) && !permission('dealer_module')) {
+                    return redirect()->back()->withErrors(['error' => $msg]);
+                }
+                $addPermission = $author->role_id == 3 || permission('dealer_add_new');
+                break;
+            case 'subdealer':
+                if (!in_array($author->role_id, [2, 3, 4]) && !permission('subdealer_module')) {
+                    return redirect()->back()->withErrors(['error' => $msg]);
+                }
+                $addPermission = $author->role_id == 4 || permission('subdealer_add_new');
+                break;
+            case 'reseller':
+                if (!in_array($author->role_id, [2, 3, 4, 5]) && !permission('reseller_module')) {
+                    return redirect()->back()->withErrors(['error' => $msg]);
+                }
+                $addPermission = $author->role_id == 5 || permission('reseller_add_new');
+                break;
+            case 'staff':
+                if (!in_array($author->role_id, $resellerRole) && !permission('staff_module')) {
+                    return redirect()->back()->withErrors(['error' => $msg]);
+                }
+                $addPermission = in_array($author->role_id, $resellerRole) || permission('staff_add_new');
+                break;
+            default:
+                if (!in_array($author->role_id, $resellerRole) && !permission('user_module')) {
+                    return redirect()->back()->withErrors(['error' => $msg]);
+                }
+                $addPermission = in_array($author->role_id, $resellerRole) || permission('user_add_new');
         }
-
-        $clean = trim(str_replace(['-', '_'], ' ', $roleName));
-        $role = Role::where('name', 'LIKE', $clean)
-            ->orWhere('name', 'LIKE', $clean . '%')
-            ->first();
-
-        if (!$role && is_numeric($clean)) {
-            $role = Role::find($clean);
-        }
-
-        if (!$role) {
-            return redirect()->route('home')->withErrors(['error' => 'Invalid role requested.']);
-        }
-
-        $users = $author->role_id == 1
-            ? User::where('role_id', $role->id)->with(['city', 'isp', 'role'])->orderBy('id', 'desc')->get()
-            : User::where('role_id', $role->id)->where('created_by', auth()->id())->with(['city', 'isp', 'role'])->orderBy('id', 'desc')->get();
-
-        $isps = $author->role_id == 1
-            ? Isp::orderBy('company_name')->get()
-            : Isp::where('user_id', auth()->id())->orderBy('company_name')->get();
 
         return view(theme('user.index'), [
-            'author'   => $author,
-            'roleName' => $roleName,
-            'role'     => $role,
-            'users'    => $users,
-            'isps'     => $isps,
+            'author'        => $author,
+            'roleName'      => $roleName,
+            'addPermission' => $addPermission,
+            'roles'         => $roles,
+            'isps'          => $isps,
         ]);
     }
 
@@ -77,7 +104,7 @@ class UserController extends Controller
             'username' => 'required|max:50|unique:users,username',
             'password' => 'required|min:6',
             'nic'      => 'required|max:30',
-            'phone'    => 'required|max:30',
+            'mobile'   => 'required|max:30',
             'email'    => 'required|email|max:100|unique:users,email',
             'address'  => 'required|max:255',
             'city_id'  => 'required|exists:areas,id',
@@ -87,14 +114,14 @@ class UserController extends Controller
             'role_id'    => $role->id,
             'isp_id'     => $request->ispid,
             'city_id'    => $request->city_id,
-            'name'       => trim($request->name),
-            'username'   => trim($request->username),
+            'name'       => $request->name,
+            'username'   => $request->username,
             'password'   => Hash::make($request->password),
-            'nic'        => trim($request->nic),
-            'phone'      => trim($request->phone),
-            'mobile'     => trim($request->phone),
-            'email'      => trim($request->email),
-            'address'    => trim($request->address),
+            'nic'        => $request->nic,
+            'phone'      => $request->phone,
+            'mobile'     => $request->mobile,
+            'email'      => $request->email,
+            'address'    => $request->address,
             'status'     => 1,
             'created_by' => auth()->id(),
             'admin_id'   => $author->role_id == 1 ? auth()->id() : ($author->admin_id ?? auth()->id()),
@@ -177,7 +204,7 @@ class UserController extends Controller
             'username' => trim($request->username),
             'nic'      => trim($request->nic),
             'phone'    => trim($request->phone),
-            'mobile'   => trim($request->phone),
+            'mobile'   => trim($request->mobile),
             'email'    => trim($request->email),
             'address'  => trim($request->address),
         ];

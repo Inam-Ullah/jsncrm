@@ -486,3 +486,20 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 ---
 
 **Handover state:** Area management, ISP management, and Admin / Team User management modules are complete. Universal `.ajax-city` class is used in `area.js` for City AJAX dropdown loading. Full CRUD operations for Team/Admin users (`index`, `insert`, `edit`, `update`, `delete`), dynamic role mapping (`/team/{roleName}`), routes, Theme 1 Blade views (`resources/views/theme1/user/`), DataTables (Column Visibility button only), dependency checks, and `activity_log()` logging are implemented, verified, and committed. Continue with the next owner-selected module from this exact point.
+# Team Module Hierarchy Update (2026-09-01)
+
+The `UserController::index()` access and add-button matrix was finalized with the owner as follows:
+
+| Module | Default module access | Default creator | Permission-based access | Permission-based create |
+|---|---|---|---|---|
+| Admin | Super Admin (role 1) only | Super Admin only | Not allowed | Not allowed |
+| Franchise | Admin (role 2) | Admin | `franchise_module` | `franchise_add_new` |
+| Dealer | Admin and Franchise (roles 2-3) | Franchise | `dealer_module` | `dealer_add_new` |
+| Subdealer | Admin, Franchise and Dealer (roles 2-4) | Dealer | `subdealer_module` | `subdealer_add_new` |
+| Reseller | Admin through Subdealer (roles 2-5) | Subdealer | `reseller_module` | `reseller_add_new` |
+| Staff | Admin through Reseller (roles 2-6) | Any of roles 2-6 | `staff_module` | `staff_add_new` |
+| Customer/User | Admin through Reseller (roles 2-6) | Any of roles 2-6 | `user_module` | `user_add_new` |
+
+The `index()` method now calculates `addPermission` according to this matrix. Admin remains deliberately isolated: no delegated permission may expose or create Admin accounts.
+
+Important continuation note: this commit finalizes only the module-access/add-button logic in `index()`. The `insert`, `edit`, `update`, `delete`, AJAX listing ownership filters, and parent hierarchy assignment still require alignment with the same matrix. In particular, the current insert method remains restricted to roles 1-2 and currently populates only `admin_id`; it must later populate the correct `admin_id`, `franchise_id`, `dealer_id`, `subdealer_id`, and `reseller_id` chain without breaking tenant isolation.
