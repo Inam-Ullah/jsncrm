@@ -31,7 +31,7 @@ $(document).ready(function () {
                 return;
             }
 
-            var url = (typeof baseurl !== 'undefined' ? baseurl : '/') + 'area/getCitiesByAjax';
+            var url = $elem.data('url') || (window.appRoutes && window.appRoutes.getCitiesByAjax) || (typeof baseurl !== 'undefined' ? baseurl : '/') + 'area/getCitiesByAjax';
 
             $.ajax({
                 type: 'POST',
@@ -155,7 +155,7 @@ $(document).ready(function () {
         }
 
         if (cityId) {
-            var url = (typeof baseurl !== 'undefined' ? baseurl : '/') + 'area/getAreaByAjax';
+            var url = $citySelect.data('url-area') || (window.appRoutes && window.appRoutes.getAreaByAjax) || (typeof baseurl !== 'undefined' ? baseurl : '/') + 'area/getAreaByAjax';
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -214,7 +214,7 @@ $(document).ready(function () {
             $targetSubareaSelect.empty().append('<option value="">Select Subarea</option>');
 
             if (areaId) {
-                var url = (typeof baseurl !== 'undefined' ? baseurl : '/') + 'area/getSubAreaByAjax';
+                var url = $areaSelect.data('url-subarea') || (window.appRoutes && window.appRoutes.getSubAreaByAjax) || (typeof baseurl !== 'undefined' ? baseurl : '/') + 'area/getSubAreaByAjax';
                 $.ajax({
                     type: 'POST',
                     url: url,
