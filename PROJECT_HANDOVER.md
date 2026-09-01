@@ -471,6 +471,9 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
   - ISP Create (`IspController@insert`): `activity_log('Created ISP: ' . $isp->company_name, 'Isp', $isp->id)`
   - ISP Update (`IspController@update`): `activity_log('Updated ISP: ' . $isp->company_name, 'Isp', $isp->id)`
   - ISP Delete (`IspController@delete`): `activity_log('Deleted ISP: ' . $isp->company_name, 'Isp', $isp->id)`
+  - Team / Admin User Create (`UserController@insert`): `activity_log('Created ' . $role->name . ': ' . $user->name, 'User', $user->id)`
+  - Team / Admin User Update (`UserController@update`): `activity_log('Updated ' . $role->name . ': ' . $user->name, 'User', $user->id)`
+  - Team / Admin User Delete (`UserController@delete`): `activity_log('Deleted ' . $role->name . ': ' . $user->name, 'User', $user->id)`
 - **Future Module Instructions:** All future AI coding agents must call `activity_log()` whenever a meaningful state change occurs in any controller/module (e.g. user create/update, package change, payment creation, RADIUS policy assignment, etc.) without creating separate service classes.
 
 ### Reusable AJAX City Dropdown Convention (.ajax-city)
@@ -482,4 +485,4 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 
 ---
 
-**Handover state:** Area management and ISP management modules are complete. Universal `.ajax-city` class was implemented in `area.js` for seamless City AJAX loading across present and future modules. ISP hierarchy (`isps.user_id` owner Admin/Super Admin vs `users.isp_id` assigned user) is enforced. Full CRUD operations for ISP (`index`, `insert`, `edit`, `update`, `delete`), routes, Theme 1 Blade views (`resources/views/theme1/isp/`), DataTables (Column Visibility button only), dependency checks, and `activity_log()` logging are implemented, verified, and committed. Continue with the next owner-selected module from this exact point.
+**Handover state:** Area management, ISP management, and Admin / Team User management modules are complete. Universal `.ajax-city` class is used in `area.js` for City AJAX dropdown loading. Full CRUD operations for Team/Admin users (`index`, `insert`, `edit`, `update`, `delete`), dynamic role mapping (`/team/{roleName}`), routes, Theme 1 Blade views (`resources/views/theme1/user/`), DataTables (Column Visibility button only), dependency checks, and `activity_log()` logging are implemented, verified, and committed. Continue with the next owner-selected module from this exact point.

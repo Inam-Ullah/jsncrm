@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\{
     HomeController,     GlobalController,   AreaController,
-    ProfileController,  IspController,
+    ProfileController,  IspController,      UserController
 };
 use Illuminate\Support\Facades\Route;
 
@@ -44,9 +44,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/delete/{id}', [IspController::class, 'delete'])->name('isp.delete');
     });
 
-    Route::post('/admin_portal/user/user/getCitiesByAjax', [AreaController::class, 'getCitiesByAjax']);
-    Route::post('/admin_portal/user/user/getAreaByAjax', [AreaController::class, 'getAreaByAjax']);
-    Route::post('/admin_portal/user/user/getSubAreaByAjax', [AreaController::class, 'getSubAreaByAjax']);
+    Route::prefix('team')->group(function (){
+        Route::get('/{roleName}', [UserController::class, 'index'])->name('team');
+        Route::post('/insert/{roleName}', [UserController::class, 'insert'])->name('team.insert');
+        Route::get('/edit/{id}', [UserController::class, 'edit'])->name('team.edit');
+        Route::post('/update', [UserController::class, 'update'])->name('team.update');
+        Route::get('/delete/{id}', [UserController::class, 'delete'])->name('team.delete');
+    });
+
 });
 
 require __DIR__.'/auth.php';

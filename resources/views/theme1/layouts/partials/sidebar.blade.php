@@ -64,7 +64,7 @@
                     {{-- Area --}}
                     @if(in_array($author->role_id, [1, 2]) || permission('area_module'))
                     <li>
-                        <a href="{{ url('area') }}">
+                        <a href="{{ route('area') }}">
                             <i class="fas fa-map-marker-alt"></i> {{ __('area') }}
                         </a>
                     </li>
@@ -120,7 +120,7 @@
                     {{-- Admin --}}
                     @if ($author->role_id == 1)
                     <li>
-                        <a href="{{ url('admin') }}">
+                        <a href="{{ route('team', 'admin') }}">
                             <i class="fas fa-user"></i> {{ __('admin') }}
                         </a>
                     </li>
