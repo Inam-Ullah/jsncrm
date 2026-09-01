@@ -488,6 +488,14 @@ No real AJAX/profile CRUD has been implemented. Legacy JavaScript exists in asse
 **Handover state:** Area management, ISP management, and Admin / Team User management modules are complete. Universal `.ajax-city` class is used in `area.js` for City AJAX dropdown loading. Full CRUD operations for Team/Admin users (`index`, `insert`, `edit`, `update`, `delete`), dynamic role mapping (`/team/{roleName}`), routes, Theme 1 Blade views (`resources/views/theme1/user/`), DataTables (Column Visibility button only), dependency checks, and `activity_log()` logging are implemented, verified, and committed. Continue with the next owner-selected module from this exact point.
 # Team Module Hierarchy Update (2026-09-01)
 
+## Team AJAX Listing Update
+
+`UserController::getTeamByAjax()` now supplies the existing server-side DataTable on the Team index page. It resolves the requested module to the correct role IDs, repeats the finalized module-access checks, scopes records to the authenticated user's hierarchy branch, supports search/pagination/order direction, and returns table cells in the exact conditional order used by the Blade headings. Staff is resolved dynamically from all role IDs outside the fixed hierarchy/customer IDs.
+
+The listing prints profile photo, name/username, applicable parent-chain names, last login, city, NAS, latest ledger balance, direct customer count, and edit/delete actions. Super Admin can see the complete authorized dataset; Admin, Franchise, Dealer, Subdealer and Reseller are filtered through their matching hierarchy ID. A permission-bearing staff user is scoped through the deepest parent ID assigned to that account so permission does not expose another tenant or unrelated branch.
+
+Known follow-up: the action links are rendered, but the existing `edit`, `update`, and `delete` controller authorization is still limited to Super Admin/Admin. Align those methods and the insert parent-chain assignment in the next Team module phase.
+
 The `UserController::index()` access and add-button matrix was finalized with the owner as follows:
 
 | Module | Default module access | Default creator | Permission-based access | Permission-based create |
@@ -497,7 +505,7 @@ The `UserController::index()` access and add-button matrix was finalized with th
 | Dealer | Admin and Franchise (roles 2-3) | Franchise | `dealer_module` | `dealer_add_new` |
 | Subdealer | Admin, Franchise and Dealer (roles 2-4) | Dealer | `subdealer_module` | `subdealer_add_new` |
 | Reseller | Admin through Subdealer (roles 2-5) | Subdealer | `reseller_module` | `reseller_add_new` |
-| Staff | Admin through Reseller (roles 2-6) | Any of roles 2-6 | `staff_module` | `staff_add_new` |
+| Staff | Admin through Reseller (roles 2-6) | Any of roles 2-6 | `staff_module` | `staff_create` |
 | Customer/User | Admin through Reseller (roles 2-6) | Any of roles 2-6 | `user_module` | `user_add_new` |
 
 The `index()` method now calculates `addPermission` according to this matrix. Admin remains deliberately isolated: no delegated permission may expose or create Admin accounts.
