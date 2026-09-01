@@ -12,23 +12,17 @@ class UserController extends Controller
 {
     private function resolveRole($roleName)
     {
-        $roleMap = [
-            'admin'      => 'Admin',
-            'franchise'  => 'Franchise',
-            'dealer'     => 'Dealer',
-            'subdealer'  => 'Subdealer',
-            'reseller'   => 'Reseller',
-            'customer'   => 'Customer',
-            'supervisor' => 'Supervisor',
-            'sales'      => 'Sales Person',
-            'accounts'   => 'Accounts',
-            'support'    => 'Support',
-            'recovery'   => 'Recovery',
-        ];
+        $clean = trim(str_replace(['-', '_'], ' ', $roleName));
 
-        $targetName = $roleMap[strtolower($roleName)] ?? ucfirst($roleName);
+        if (is_numeric($clean)) {
+            $role = Role::find($clean);
+            if ($role) return $role;
+        }
 
-        return Role::where('name', 'LIKE', $targetName)->first();
+        $role = Role::where('name', 'LIKE', $clean)->first();
+        if ($role) return $role;
+
+        return Role::where('name', 'LIKE', $clean . '%')->first();
     }
 
     public function index($roleName)
