@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\{
-    HomeController,     GlobalController,   AreaController,
+    HomeController,     GlobalController,   AreaController,     NetworkController,
     ProfileController,  IspController,      UserController
 };
 use Illuminate\Support\Facades\Route;
@@ -42,6 +42,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/edit/{id}', [IspController::class, 'edit'])->name('isp.edit');
         Route::post('/update', [IspController::class, 'update'])->name('isp.update');
         Route::get('/delete/{id}', [IspController::class, 'delete'])->name('isp.delete');
+    });
+
+    Route::prefix('network')->group(function (){
+        Route::get('/nas', [NetworkController::class, 'index'])->name('network.nas');
+        Route::post('/nas/insert', [NetworkController::class, 'insert'])->name('network.nas.insert');
+        Route::get('/nas/edit/{id}', [NetworkController::class, 'edit'])->name('network.nas.edit');
+        Route::post('/nas/update', [NetworkController::class, 'update'])->name('network.nas.update');
+        Route::get('/nas/delete/{id}', [NetworkController::class, 'delete'])->name('network.nas.delete');
+        Route::get('/nas/view/{id}', [NetworkController::class, 'view'])->name('network.nas.view');
     });
 
     Route::prefix('team')->group(function (){

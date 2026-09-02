@@ -82,7 +82,7 @@
                     {{-- Network --}}
                     @if($author->role_id == 2 || permission('network_module'))
                     <li>
-                        <a href="{{ url('network/nas') }}">
+                        <a href="{{ route('network.nas') }}">
                             <i class="fas fa-broadcast-tower"></i> {{ __('network')}}
                         </a>
                     </li>
