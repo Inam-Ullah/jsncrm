@@ -101,9 +101,10 @@
     </div>
 </div>
 <!-- /page content -->
+@endsection
 
+@section('scripts')
 <!-- Checking Instant NAS Online/Offline Status -->
-
 <script>
     $(document).ready(function() {
         // all admins table
@@ -187,5 +188,4 @@
 
     });
 </script>
-
 @endsection

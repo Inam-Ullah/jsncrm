@@ -264,7 +264,6 @@
         <!-- end of col-12 -->
     </div>
 </div>
-</div>
 <!-- /page content -->
 
 @endsection
